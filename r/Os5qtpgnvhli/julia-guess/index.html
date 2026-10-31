@@ -1,0 +1,339 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow"><style>html,body{margin:0;padding:0}</style></head><body><title>Guessing Julia</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column in the Politype report style. Score sheet first,
+   then a per-topic dot chart, then the misses grouped by pattern, then every answer. */
+:root {
+  --paper: #EEF1F4;
+  --sheet: #FBFCFD;
+  --ink: #15233F;
+  --muted: #5A6578;
+  --rule: #CDD4DD;
+  --track: #DDE2E8;
+  --actual: #0B8068;
+  --guess: #C0581A;
+  --actual-soft: #E2F1EC;
+  --guess-soft: #F7E9DE;
+  --font-q: "Newsreader", Georgia, "Times New Roman", serif;
+  --font-ui: "Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-code: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0E1318; --sheet: #151C23; --ink: #E4E9EF; --muted: #98A3B3; --rule: #2B3540; --track: #2B3540;
+    --actual: #2E9E80; --guess: #D27A3E; --actual-soft: #16302A; --guess-soft: #3A2417;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0E1318; --sheet: #151C23; --ink: #E4E9EF; --muted: #98A3B3; --rule: #2B3540; --track: #2B3540;
+  --actual: #2E9E80; --guess: #D27A3E; --actual-soft: #16302A; --guess-soft: #3A2417;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--paper); color: var(--ink); font-family: var(--font-ui); font-size: 16px; line-height: 1.6; }
+.wrap {
+  max-width: 920px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px 96px;
+  display: flex; flex-direction: column; gap: 44px;
+}
+.wrap > * { min-width: 0; }
+h1, h2, h3 { font-family: var(--font-q); font-weight: 500; margin: 0; text-wrap: balance; }
+p { margin: 0; }
+ul { margin: 0; padding: 0; list-style: none; }
+.muted { color: var(--muted); }
+.code { font-family: var(--font-code); font-size: 12.5px; letter-spacing: 0.03em; }
+.eyebrow { font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+
+.sheet { background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; padding: clamp(22px, 5vw, 40px); display: flex; flex-direction: column; gap: 22px; }
+.sheet h1 { font-size: clamp(34px, 7vw, 52px); line-height: 1.05; letter-spacing: -0.02em; }
+.sheet .tagline { font-family: var(--font-q); font-style: italic; font-size: clamp(18px, 3.2vw, 21px); line-height: 1.45; max-width: 62ch; }
+.scores { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+.score { border-top: 1px solid var(--rule); padding-top: 14px; display: flex; flex-direction: column; gap: 4px; }
+.score .num { font-family: var(--font-q); font-size: 44px; line-height: 1; font-variant-numeric: tabular-nums; }
+.score .num small { font-size: 22px; color: var(--muted); }
+
+section.s { display: flex; flex-direction: column; gap: 18px; }
+section.s > h2 { font-size: clamp(26px, 4.6vw, 32px); }
+section.s > .intro { max-width: 65ch; color: var(--muted); }
+
+/* Dot chart */
+.legend { display: flex; gap: 20px; flex-wrap: wrap; font-size: 14px; }
+.legend span { display: inline-flex; align-items: center; gap: 8px; }
+.key { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+.key.a { background: var(--actual); }
+.key.g { border: 2.5px solid var(--guess); background: var(--sheet); }
+.chart { background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; padding: 20px clamp(16px, 4vw, 28px) 12px; display: flex; flex-direction: column; gap: 6px; position: relative; }
+.arow { display: flex; flex-direction: column; gap: 4px; padding-block: 8px; border-bottom: 1px solid var(--rule); }
+.arow:last-of-type { border-bottom: 0; }
+.ahead { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; align-items: baseline; }
+.ahead b { font-weight: 600; }
+.ahead .gap { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.ahead .gap.big { color: var(--ink); font-weight: 600; }
+.plot { position: relative; height: 30px; margin-inline: 8px; }
+.plot .tick { position: absolute; top: 6px; bottom: 6px; width: 1px; background: var(--track); }
+.plot .tick.zero { background: var(--rule); width: 1.5px; }
+.plot .base { position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: var(--track); }
+.plot .span { position: absolute; top: 50%; height: 2px; margin-top: -1px; background: var(--muted); opacity: 0.55; }
+.dot { position: absolute; top: 50%; width: 22px; height: 22px; margin: -11px 0 0 -11px; border-radius: 50%; display: grid; place-items: center; cursor: default; background: transparent; border: 0; padding: 0; }
+.dot i { width: 12px; height: 12px; border-radius: 50%; display: block; box-shadow: 0 0 0 2px var(--sheet); }
+.dot.a i { background: var(--actual); }
+.dot.g i { width: 13px; height: 13px; border: 2.5px solid var(--guess); background: var(--sheet); }
+.dot:focus-visible { outline: 2px solid var(--ink); outline-offset: 1px; }
+.ends { display: flex; justify-content: space-between; gap: 12px; font-size: 12px; color: var(--muted); }
+.scale { position: relative; height: 16px; margin-inline: 8px; font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.scale span { position: absolute; transform: translateX(-50%); }
+.tip { position: absolute; pointer-events: none; background: var(--ink); color: var(--sheet); font-size: 13px; padding: 6px 10px; border-radius: 4px; white-space: nowrap; z-index: 5; transform: translate(-50%, -100%); }
+
+/* Patterns */
+.pat { background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; padding: clamp(18px, 4vw, 28px); display: flex; flex-direction: column; gap: 14px; }
+.pat h3 { font-size: 23px; }
+.pat .lede { max-width: 65ch; }
+.pairs { display: flex; flex-direction: column; gap: 12px; }
+.pair { border-top: 1px solid var(--rule); padding-top: 12px; display: flex; flex-direction: column; gap: 8px; }
+.ph { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+.qid { color: var(--muted); }
+.qt { font-weight: 600; flex: 1 1 240px; min-width: 0; }
+.imp { font-size: 13px; font-variant-numeric: tabular-nums; }
+.ga { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.ga > div { min-width: 0; display: flex; flex-direction: column; gap: 4px; font-size: 15px; }
+.lab { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; display: inline-flex; align-items: center; gap: 6px; }
+.lab::before { content: ""; width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+.lab.lg::before { border: 2px solid var(--guess); }
+.lab.la::before { background: var(--actual); }
+@media (max-width: 560px) { .ga { grid-template-columns: 1fr; } }
+.right { background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; padding: clamp(18px, 4vw, 28px); display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 8px 24px; }
+
+/* Full table */
+.filters { display: flex; gap: 8px; flex-wrap: wrap; }
+.filters button { font: inherit; font-size: 14px; padding: 6px 14px; border-radius: 999px; border: 1px solid var(--rule); background: var(--sheet); color: var(--ink); cursor: pointer; }
+.filters button[aria-pressed="true"] { background: var(--ink); color: var(--sheet); border-color: var(--ink); }
+.filters button:focus-visible { outline: 2px solid var(--actual); outline-offset: 2px; }
+.tablewrap { overflow-x: auto; background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; }
+table { border-collapse: collapse; width: 100%; min-width: 680px; font-size: 14.5px; }
+th, td { text-align: left; vertical-align: top; padding: 10px 14px; border-bottom: 1px solid var(--rule); }
+th { font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.pill { display: inline-block; font-size: 12px; font-weight: 600; padding: 1px 8px; border-radius: 999px; white-space: nowrap; }
+.pill.y { background: var(--actual-soft); color: var(--ink); }
+.pill.n { background: var(--guess-soft); color: var(--ink); }
+td .why { margin-top: 6px; font-family: var(--font-q); font-style: italic; color: var(--muted); max-width: 60ch; }
+.foot { font-size: 13px; color: var(--muted); max-width: 65ch; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+  <header class="sheet">
+    <div class="eyebrow">Politype · Your guess vs. Julia's answers · October 31, 2026</div>
+    <h1>Guessing Julia</h1>
+    <p class="tagline">You pictured a center-left moderate who values order and tradition. Julia is a liberal nationalist and a foreign policy hawk. She is more moderate than you thought on culture-war issues and much more hardline on immigration and putting citizens first.</p>
+    <div class="scores">
+      <div class="score"><span class="num">30<small> of 60</small></span><span class="muted">answers you guessed exactly</span></div>
+      <div class="score"><span class="num">13<small> of 25</small></span><span class="muted">exact on the issues she rated 5 out of 5, "a defining issue for me"</span></div>
+    </div>
+  </header>
+
+  <section class="s">
+    <h2>Scores by topic</h2>
+    <p class="intro">Each topic is the average of the coded answers on that topic, on a scale from -2 to +2. Your guess and her answers are close on five topics. They are far apart on foreign affairs and on whose welfare counts.</p>
+    <div class="legend"><span><i class="key g"></i>Your guess</span><span><i class="key a"></i>Julia</span></div>
+    <div class="chart" id="chart"></div>
+  </section>
+
+  <section class="s">
+    <h2>Where you missed</h2>
+    <p class="intro">Your misses group into five patterns. Each shows the questions behind it.</p>
+    <article class="pat"><h3>Immigration and citizens first</h3><p class="lede">This was your biggest miss. All four questions are ones she rated 5 out of 5. You guessed moderate answers. She picked the strongest citizens-first options on every one.</p><ul class="pairs"><li class="pair">
+  <div class="ph"><span class="code qid">U6</span><span class="qt">Legal immigration levels</span><span class="imp">5/5</span></div>
+  <div class="ga"><div><span class="lab lg">Your guess</span><p>Increase moderately, particularly through employment-based immigration</p></div>
+  <div><span class="lab la">Julia</span><p>Reduce overall legal immigration, prioritizing applicants with high economic contributions</p></div></div>
+</li><li class="pair">
+  <div class="ph"><span class="code qid">U7</span><span class="qt">Unauthorized immigration and enforcement</span><span class="imp">5/5</span></div>
+  <div class="ga"><div><span class="lab lg">Your guess</span><p>A conditional path to legal status for established residents, alongside strong border enforcement and immigration-system reform</p></div>
+  <div><span class="lab la">Julia</span><p>Enforce borders rigorously and increase removals, with legalization confined to narrowly defined groups</p></div></div>
+</li><li class="pair">
+  <div class="ph"><span class="code qid">P15</span><span class="qt">Immigration, national obligations, and universal welfare</span><span class="imp">5/5</span></div>
+  <div class="ga"><div><span class="lab lg">Your guess</span><p>Favor moderate immigration, prioritizing citizens&#x27; interests while recognizing benefits to migrants.</p></div>
+  <div><span class="lab la">Julia</span><p>National governments have a primary obligation to their own citizens, even at substantial cost to global welfare.</p></div></div>
+</li><li class="pair">
+  <div class="ph"><span class="code qid">P20</span><span class="qt">Universal moral worth versus obligations to citizens</span><span class="imp">5/5</span></div>
+  <div class="ga"><div><span class="lab lg">Your guess</span><p>Probably B, but governments may legitimately place some additional weight on citizens.</p></div>
+  <div><span class="lab la">Julia</span><p>A. The public resources of a country should primarily benefit its own citizens.</p></div></div>
+</li></ul></article>
+<article class="pat"><h3>Foreign policy</h3><p class="lede">You guessed she would favor restraint. She wants a large military and would back a threatened democracy. China is the one place you guessed too hawkish: she keeps ordinary trade.</p><ul class="pairs"><li class="pair">
+  <div class="ph"><span class="code qid">U21</span><span class="qt">Defense spending and military strategy</span><span class="imp">4/5</span></div>
+  <div class="ga"><div><span class="lab lg">Your guess</span><p>Substantially reduce defense spending and the US military presence overseas</p></div>
+  <div><span class="lab la">Julia</span><p>Maintain a large, globally capable military, with selective modernization and efficiency reforms</p></div></div>
+</li><li class="pair">
+  <div class="ph"><span class="code qid">P25</span><span class="qt">Foreign policy: Liberal ideals versus strategic restraint</span><span class="imp">5/5</span></div>
+  <div class="ga"><div><span class="lab lg">Your guess</span><p>Favor diplomatic engagement and targeted measures; avoid broad confrontations without clear prospects for improvement</p></div>
+  <div><span class="lab la">Julia</span><p>Apply meaningful pressure, but balance it with security interests and the likely effectiveness of sanctions</p></div></div>
+</li><li class="pair">
+  <div class="ph"><span class="code qid">P35</span><span class="qt">International security and military intervention</span><span class="imp">4/5</span></div>
+  <div class="ga"><div><span class="lab lg">Your guess</span><p>Provide limited assistance and prioritize diplomacy to minimize escalation</p></div>
+  <div><span class="lab la">Julia</span><p>Support the threatened democracy if the strategic outlook and expected consequences justify the risks</p></div></div>
+</li><li class="pair">
+  <div class="ph"><span class="code qid">U23</span><span class="qt">China, trade, and economic security</span><span class="imp">5/5</span></div>
+  <div class="ga"><div><span class="lab lg">Your guess</span><p>Pursue extensive economic decoupling, tariffs, and restrictions to reduce dependence</p></div>
+  <div><span class="lab la">Julia</span><p>Adopt strong restrictions in strategic technologies while preserving significant ordinary trade</p></div></div>
+</li></ul></article>
+<article class="pat"><h3>Order and tradition</h3><p class="lede">You guessed a stricter traditionalist than she is. She would reform traditions gradually, weigh protest rights equally with public order, and legalize cannabis. You did get her toughest positions on policing (U8) and sentencing (U9) right.</p><ul class="pairs"><li class="pair">
+  <div class="ph"><span class="code qid">P1</span><span class="qt">What is the primary purpose of government?</span><span class="imp">5/5</span></div>
+  <div class="ga"><div><span class="lab lg">Your guess</span><p>Preserve social order, stability, and institutions</p></div>
+  <div><span class="lab la">Julia</span><p>A combination or different principle</p></div></div>
+</li><li class="pair">
+  <div class="ph"><span class="code qid">P4</span><span class="qt">How should society approach longstanding traditions and institutions?</span><span class="imp">4/5</span></div>
+  <div class="ga"><div><span class="lab lg">Your guess</span><p>Preserve them unless there is a compelling reason to change</p></div>
+  <div><span class="lab la">Julia</span><p>Reform them gradually, respecting accumulated experience</p></div></div>
+</li><li class="pair">
+  <div class="ph"><span class="code qid">P30</span><span class="qt">Public order versus civil liberties</span><span class="imp muted">no rating</span></div>
+  <div class="ga"><div><span class="lab lg">Your guess</span><p>Prioritize public order; demonstrations should not significantly interfere with others&#x27; daily lives</p></div>
+  <div><span class="lab la">Julia</span><p>Give public order and residents&#x27; ordinary freedom of movement comparable weight to protest rights</p></div></div>
+</li><li class="pair">
+  <div class="ph"><span class="code qid">P34</span><span class="qt">Crime, punishment, and the rule of law</span><span class="imp">4/5</span></div>
+  <div class="ga"><div><span class="lab lg">Your guess</span><p>Prioritize punishment and public order, accepting some additional restrictions to reduce crime</p></div>
+  <div><span class="lab la">Julia</span><p>Combine credible enforcement and accountability with substantial rehabilitation and prevention</p></div></div>
+</li><li class="pair">
+  <div class="ph"><span class="code qid">U10</span><span class="qt">Drugs and addiction</span><span class="imp">3/5</span></div>
+  <div class="ga"><div><span class="lab lg">Your guess</span><p>Retain broad prohibitions and strengthen enforcement against possession and distribution of dangerous drugs</p></div>
+  <div><span class="lab la">Julia</span><p>Legalize cannabis, expand treatment and harm reduction, but retain criminal penalties for possession of the most dangerous drugs</p></div></div>
+</li></ul></article>
+<article class="pat"><h3>Economics, in both directions</h3><p class="lede">Your misses here went both ways, so her economic score looks close to your guess even though many answers differ. She is more pro-market than you guessed on business, wages, and the civil service. She is more pro-government on schools and Social Security.</p><ul class="pairs"><li class="pair">
+  <div class="ph"><span class="code qid">P27</span><span class="qt">Concentrated private power</span><span class="imp">4/5</span></div>
+  <div class="ga"><div><span class="lab lg">Your guess</span><p>Intervene aggressively; concentrated private power can undermine liberty even without conventional market failures</p></div>
+  <div><span class="lab la">Julia</span><p>Intervene only where demonstrable consumer harm or identifiable market failures exist</p></div></div>
+</li><li class="pair">
+  <div class="ph"><span class="code qid">U4</span><span class="qt">Business regulation and competition</span><span class="imp">3/5</span></div>
+  <div class="ga"><div><span class="lab lg">Your guess</span><p>Aggressively expand antitrust enforcement and regulation of large firms</p></div>
+  <div><span class="lab la">Julia</span><p>Strengthen antitrust enforcement while simplifying unnecessarily burdensome regulations</p></div></div>
+</li><li class="pair">
+  <div class="ph"><span class="code qid">U3</span><span class="qt">Minimum wage and labor markets</span><span class="imp">2/5</span></div>
+  <div class="ga"><div><span class="lab lg">Your guess</span><p>A moderately higher federal floor, with regional or state adjustments</p></div>
+  <div><span class="lab la">Julia</span><p>Keep the federal floor relatively modest and leave most increases to states and cities</p></div></div>
+</li><li class="pair">
+  <div class="ph"><span class="code qid">U19</span><span class="qt">Federal bureaucracy and civil-service reform</span><span class="imp">3/5</span></div>
+  <div class="ga"><div><span class="lab lg">Your guess</span><p>Preserve strong civil-service protections and expand agency capacity and expertise</p></div>
+  <div><span class="lab la">Julia</span><p>Make it substantially easier to dismiss underperforming federal employees, restructure agencies, and tie advancement to measurable results</p></div></div>
+</li><li class="pair">
+  <div class="ph"><span class="code qid">U13</span><span class="qt">K-12 education and school choice</span><span class="imp">5/5</span></div>
+  <div class="ga"><div><span class="lab lg">Your guess</span><p>Expand high-performing charters and limited choice programs while reforming traditional public schools</p></div>
+  <div><span class="lab la">Julia</span><p>Restrict private vouchers and charter expansion, concentrating resources in district public schools</p></div></div>
+</li><li class="pair">
+  <div class="ph"><span class="code qid">U20</span><span class="qt">Social Security and Medicare fiscal reform</span><span class="imp">4/5</span></div>
+  <div class="ga"><div><span class="lab lg">Your guess</span><p>Prioritize slowing benefit growth, means-testing, and adjusting retirement eligibility while protecting poorer recipients</p></div>
+  <div><span class="lab la">Julia</span><p>Combine additional revenue with gradual adjustments to benefits, eligibility, or payment systems</p></div></div>
+</li></ul></article>
+<article class="pat"><h3>When she hedges</h3><p class="lede">She took a firm side where you expected a hedge, and said &quot;it depends&quot; where you expected a firm answer.</p><ul class="pairs"><li class="pair">
+  <div class="ph"><span class="code qid">P12</span><span class="qt">Whose welfare matters most?</span><span class="imp">4/5</span></div>
+  <div class="ga"><div><span class="lab lg">Your guess</span><p>Probably B, depending on the relative welfare gains.</p></div>
+  <div><span class="lab la">Julia</span><p>Policy B. Higher aggregate welfare is the decisive consideration here.</p></div></div>
+</li><li class="pair">
+  <div class="ph"><span class="code qid">P9</span><span class="qt">Democracy versus expertise</span><span class="imp">5/5</span></div>
+  <div class="ga"><div><span class="lab lg">Your guess</span><p>The independent institution should block the policy if the evidence is sufficiently strong</p></div>
+  <div><span class="lab la">Julia</span><p>It depends on the institution&#x27;s mandate, the evidence, and the seriousness of the harm</p></div></div>
+</li><li class="pair">
+  <div class="ph"><span class="code qid">P26</span><span class="qt">Markets, regulation, and the burden of proof</span><span class="imp">2/5</span></div>
+  <div class="ga"><div><span class="lab lg">Your guess</span><p>Generally on regulators, though credible evidence of serious harm can justify precaution</p></div>
+  <div><span class="lab la">Julia</span><p>Neither side deserves a presumption; assess expected benefits, harms, and uncertainty symmetrically</p></div></div>
+</li></ul></article>
+  </section>
+
+  <section class="s">
+    <h2>Where you were right</h2>
+    <ul class="right"><li><span class="code qid">U1</span> Federal taxation</li><li><span class="code qid">U2</span> Federal spending and deficits</li><li><span class="code qid">U8</span> Policing and public disorder</li><li><span class="code qid">U9</span> Criminal sentencing and incarceration</li><li><span class="code qid">U5</span> Healthcare system</li><li><span class="code qid">P33</span> Climate change and economic growth</li><li><span class="code qid">P22</span> Nationalism, patriotism, and political identity</li><li><span class="code qid">P13</span> Cultural liberalism and social norms</li><li><span class="code qid">P19</span> Democratic legitimacy versus constitutional rights</li><li><span class="code qid">P21</span> Judicial power and democratic accountability</li><li><span class="code qid">U22</span> NATO and American alliances</li></ul>
+  </section>
+
+  <section class="s">
+    <h2>Every answer</h2>
+    <div class="filters" role="group" aria-label="Filter answers">
+      <button id="f-all" data-f="all" aria-pressed="false">All 60</button>
+      <button id="f-miss" data-f="miss" aria-pressed="true">Misses</button>
+      <button id="f-hit" data-f="hit" aria-pressed="false">Matches</button>
+      <button id="f-five" data-f="five" aria-pressed="false">Rated 5 out of 5</button>
+    </div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Question</th><th>Rated</th><th>Your guess</th><th>Julia's answer</th><th></th></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+    <p class="foot">Julia's own explanations appear under her answer where she gave one. Your guess did not include importance ratings, so the ratings shown are hers.</p>
+  </section>
+</div>
+
+<script type="application/json" id="data">{"rows": [{"id": "P1", "title": "What is the primary purpose of government?", "imp": 5, "guess": "Preserve social order, stability, and institutions", "actual": "A combination or different principle", "match": false, "why": "Gov purposes is to both protect individual rights and freedoms but balance that responsibility with protecting society overall from external and internal threats of those who seek to suppress individual rights/liberties."}, {"id": "P2", "title": "How do you view economic inequality?", "imp": 3, "guess": "Not inherently problematic if wealth is acquired fairly", "actual": "Acceptable, but excessive inequality threatens opportunity and society", "match": false, "why": "I think several of these things are true. Income inequality is acceptable but if it becomes extremely skewed such that the lower end cannot afford basics such as food and healthcare, this threatens societal stability which is not acceptable. Income equality should not be the goal of the state; however, opportunities should exist for children of lower income families to improve their lot in life. Similarity, death tax burdens should be sufficiently high that the children of the high income are also motivated to contribute to society."}, {"id": "P3", "title": "When individual freedom conflicts with collective welfare, which should generally take precedence?", "imp": 4, "guess": "Individual freedom, but with reasonable public-interest restrictions", "actual": "Individual freedom, but with reasonable public-interest restrictions", "match": true, "why": "It depends on which individual freedoms and what the impact to collective welfare is but generally individual freedom should be protected as long as your individual freedom doesn\u2019t encroach upon another\u2019s individual freedom or create at large issues for public welfare."}, {"id": "P4", "title": "How should society approach longstanding traditions and institutions?", "imp": 4, "guess": "Preserve them unless there is a compelling reason to change", "actual": "Reform them gradually, respecting accumulated experience", "match": false, "why": "Longstanding traditions shouldn\u2019t be able to be changed on whims, significant collective approval over time should be the prerequisite to avoid the tyranny of the majority."}, {"id": "P5", "title": "Which statement best captures your conception of justice?", "imp": 5, "guess": "Protecting equal rights and impartial treatment under the law", "actual": "Protecting equal rights and impartial treatment under the law", "match": true, "why": ""}, {"id": "P6", "title": "Redistribution and taxation", "imp": 4, "guess": "Only modestly; growth, incentives, and property rights deserve greater weight", "actual": "Only modestly; growth, incentives, and property rights deserve greater weight", "match": true, "why": "Modest support. Instead of much higher income taxes, death tax burdens should be higher to still incentivize high innovation of productive citizens during their life. Tax law should be reformed to prevent underhanded tax avoidance schemes."}, {"id": "P7", "title": "Markets versus government", "imp": 4, "guess": "Markets should be the default, with government correcting identifiable failures", "actual": "Markets should be the default, with government correcting identifiable failures", "match": true, "why": "Gov should have some regulations to prevent unfair/exploitative markets. But market forces should generally be allowed to prevail."}, {"id": "P8", "title": "Individual liberty and paternalism", "imp": 4, "guess": "Possibly; the magnitude of the benefits and costs determines the answer", "actual": "Possibly; the magnitude of the benefits and costs determines the answer", "match": true, "why": "Depends on the activity and harm. Regulations should be tailored. IE gambling: if it is allowed, should be limited to 5% of one\u2019s annual income. Someone who has been arrested for a drinking/drug related violent offense should be banned from legally consuming those items, but not every adult. Most hard drugs should be completely banned."}, {"id": "P9", "title": "Democracy versus expertise", "imp": 5, "guess": "The independent institution should block the policy if the evidence is sufficiently strong", "actual": "It depends on the institution's mandate, the evidence, and the seriousness of the harm", "match": false, "why": "Tough. Ideally would have an independent body always acting on true science to only prevent disaster. However the implementation of this would be extremely difficult."}, {"id": "P10", "title": "Equality of opportunity versus equality of outcomes", "imp": 5, "guess": "Continue improving opportunities and social mobility, without targeting outcome parity", "actual": "Focus on protecting equal rights and fair rules; unequal outcomes aren't intrinsically unjust", "match": false, "why": "Groups should not be given less opportunity because they belong to an historically advantaged group of historically disadvantaged groups have access to quality institutions"}, {"id": "P11", "title": "Are individual rights inviolable?", "imp": 3, "guess": "No. Certain rights should not be violated, even to maximize welfare.", "actual": "I reject the framing or would answer differently.", "match": false, "why": "I don\u2019t see a situation where a small group of totally innocent people would be in possession of such dangerous information, and how this would be known before implementing surveillance. With this background cannot guarantee it wouldn\u2019t be an institutional precedent."}, {"id": "P12", "title": "Whose welfare matters most?", "imp": 4, "guess": "Probably B, depending on the relative welfare gains.", "actual": "Policy B. Higher aggregate welfare is the decisive consideration here.", "match": false, "why": "Policy B, but it also depends on the impact of policy A. Is the welfare loss substantial to a subgroup of the better off? If so, no to policy A. If welfare loss is essentially unnoticeable, then I would pick policy A. But generally in a society overall welfare loss should be avoided."}, {"id": "P13", "title": "Cultural liberalism and social norms", "imp": 5, "guess": "Balance personal autonomy and social cohesion, potentially permitting some legal restrictions.", "actual": "Balance personal autonomy and social cohesion, potentially permitting some legal restrictions.", "match": true, "why": "Laws should always apply uniformly. If the minority\u2019s way of life runs afoul of the law, it is not to be permitted. State should promote social cohesion to majority culture."}, {"id": "P14", "title": "Group disadvantage and individual fairness", "imp": 5, "guess": "Oppose differential treatment based on group identity; equal individual treatment is paramount.", "actual": "Oppose differential treatment based on group identity; equal individual treatment is paramount.", "match": true, "why": "No individual should be given less opportunity because of their individual birth circumstances."}, {"id": "P15", "title": "Immigration, national obligations, and universal welfare", "imp": 5, "guess": "Favor moderate immigration, prioritizing citizens' interests while recognizing benefits to migrants.", "actual": "National governments have a primary obligation to their own citizens, even at substantial cost to global welfare.", "match": false, "why": "A government has the obligation to their citizen welfare only. Global welfare only matters in so far as it threatens the government\u2019s citizens."}, {"id": "P16", "title": "Do you give special moral weight to the worst-off?", "imp": 2, "guess": "No. Equal gains in actual well-being have equal moral value, regardless of who receives them.", "actual": "No. Equal gains in actual well-being have equal moral value, regardless of who receives them.", "match": true, "why": "Honestly depends more on the circumstances. Why is this person disadvantaged? But generally I\u2019d say equal moral value."}, {"id": "P17", "title": "What makes a right fundamental?", "imp": 4, "guess": "Human dignity and autonomy: people must not be treated merely as instruments.", "actual": "Human dignity and autonomy: people must not be treated merely as instruments.", "match": true, "why": ""}, {"id": "P18", "title": "Can economic liberty be restricted for social welfare?", "imp": 4, "guess": "No. Property rights matter, but ordinary taxation is not comparable to violating fundamental civil liberties.", "actual": "No. Property rights matter, but ordinary taxation is not comparable to violating fundamental civil liberties.", "match": true, "why": ""}, {"id": "P19", "title": "Democratic legitimacy versus constitutional rights", "imp": 5, "guess": "Absolutely. Fundamental rights constrain even overwhelming democratic majorities.", "actual": "Absolutely. Fundamental rights constrain even overwhelming democratic majorities.", "match": true, "why": "Must prevent tyranny of the majority."}, {"id": "P20", "title": "Universal moral worth versus obligations to citizens", "imp": 5, "guess": "Probably B, but governments may legitimately place some additional weight on citizens.", "actual": "A. The public resources of a country should primarily benefit its own citizens.", "match": false, "why": "Government takes money from its citizens to function. The spending of those funds should prioritize helping the citizens of that country. I think citizens of a country can be helped by giving aid to others if part of a larger policy prescription"}, {"id": "P21", "title": "Judicial power and democratic accountability", "imp": 4, "guess": "Strong judicial review, including robust protection of rights against majorities", "actual": "Strong judicial review, including robust protection of rights against majorities", "match": true, "why": "Judicial review should ensure protect of rights of individuals"}, {"id": "P22", "title": "Nationalism, patriotism, and political identity", "imp": 5, "guess": "A substantive national culture and historical identity are important alongside civic principles", "actual": "A substantive national culture and historical identity are important alongside civic principles", "match": true, "why": "Shared civic principals are a requirement of a functioning democratic society. Strong national culture is important as well for social trust and cohesion. State should cultivate and preserve national identity via reasonable assimilation requirements and immigration regulations."}, {"id": "P23", "title": "The welfare state and positive rights", "imp": 4, "guess": "There is a strong public obligation to guarantee a decent minimum, though not every service is an absolute right", "actual": "There is a strong public obligation to guarantee a decent minimum, though not every service is an absolute right", "match": true, "why": ""}, {"id": "P24", "title": "Religion, pluralism, and public institutions", "imp": 3, "guess": "Religious freedom deserves protection, but all public-facing institutions should meet robust secular equality standards", "actual": "Broad accommodation for adults, but stronger common standards for institutions educating children", "match": false, "why": ""}, {"id": "P25", "title": "Foreign policy: Liberal ideals versus strategic restraint", "imp": 5, "guess": "Favor diplomatic engagement and targeted measures; avoid broad confrontations without clear prospects for improvement", "actual": "Apply meaningful pressure, but balance it with security interests and the likely effectiveness of sanctions", "match": false, "why": ""}, {"id": "P26", "title": "Markets, regulation, and the burden of proof", "imp": 2, "guess": "Generally on regulators, though credible evidence of serious harm can justify precaution", "actual": "Neither side deserves a presumption; assess expected benefits, harms, and uncertainty symmetrically", "match": false, "why": ""}, {"id": "P27", "title": "Concentrated private power", "imp": 4, "guess": "Intervene aggressively; concentrated private power can undermine liberty even without conventional market failures", "actual": "Intervene only where demonstrable consumer harm or identifiable market failures exist", "match": false, "why": ""}, {"id": "P28", "title": "Free speech and harmful expression", "imp": 4, "guess": "Possibly, if sufficiently compelling evidence establishes substantial societal harm", "actual": "Possibly, if sufficiently compelling evidence establishes substantial societal harm", "match": true, "why": ""}, {"id": "P29", "title": "Capitalism and worker power", "imp": 3, "guess": "Maintain private enterprise, with targeted measures promoting competition and worker mobility", "actual": "Maintain private enterprise, with targeted measures promoting competition and worker mobility", "match": true, "why": ""}, {"id": "P30", "title": "Public order versus civil liberties", "imp": null, "guess": "Prioritize public order; demonstrations should not significantly interfere with others' daily lives", "actual": "Give public order and residents' ordinary freedom of movement comparable weight to protest rights", "match": false, "why": "Protest rights shouldn\u2019t significant infringe on individual liberties."}, {"id": "P31", "title": "Healthcare and the welfare state", "imp": 3, "guess": "Universal public insurance if evidence shows it performs better, but without an intrinsic preference for public provision", "actual": "Universal public insurance if evidence shows it performs better, but without an intrinsic preference for public provision", "match": true, "why": "Healthcare for lower income citizens is an important issue and I believe everyone deserves access to a basic minimum of care. Implementation and costs significantly matter here"}, {"id": "P32", "title": "Housing, local democracy, and property rights", "imp": 3, "guess": "Preserve strong local control over development decisions", "actual": "Substantially liberalize construction while retaining limited local safeguards", "match": false, "why": "Original homeowners should have some say in policy. However severe housing shortages are a threat to societal stability and government has an obligation for its citizens to be housed"}, {"id": "P33", "title": "Climate change and economic growth", "imp": 5, "guess": "A strong carbon-pricing framework combined with targeted public investment and carefully justified regulation", "actual": "A strong carbon-pricing framework combined with targeted public investment and carefully justified regulation", "match": true, "why": "Climate change is an existential threat to society today and in the future. Gov has an obligation to prevent this harm. Government should regulate and use market forces such as carbon taxes and subsidies for energy alternatives to promote investment."}, {"id": "P34", "title": "Crime, punishment, and the rule of law", "imp": 4, "guess": "Prioritize punishment and public order, accepting some additional restrictions to reduce crime", "actual": "Combine credible enforcement and accountability with substantial rehabilitation and prevention", "match": false, "why": ""}, {"id": "P35", "title": "International security and military intervention", "imp": 4, "guess": "Provide limited assistance and prioritize diplomacy to minimize escalation", "actual": "Support the threatened democracy if the strategic outlook and expected consequences justify the risks", "match": false, "why": ""}, {"id": "U1", "title": "Federal taxation", "imp": 5, "guess": "Keep the overall tax burden broadly similar, but simplify the code and close loopholes", "actual": "Keep the overall tax burden broadly similar, but simplify the code and close loopholes", "match": true, "why": "Death tax should be higher. Majority of loopholes must be closed. Tax burden should be relatively the same except for a society where there richest are richest by a wide margin. In that circumstance, more tax burden should be levied."}, {"id": "U2", "title": "Federal spending and deficits", "imp": 5, "guess": "Make deficit reduction a central priority through meaningful spending reforms and some revenue measures", "actual": "Make deficit reduction a central priority through meaningful spending reforms and some revenue measures", "match": true, "why": "Dangerous deficit spending is an existential threat to society. Gov has an obligation to prevent this."}, {"id": "U3", "title": "Minimum wage and labor markets", "imp": 2, "guess": "A moderately higher federal floor, with regional or state adjustments", "actual": "Keep the federal floor relatively modest and leave most increases to states and cities", "match": false, "why": "Market forces should be allowed to guide minimum wage."}, {"id": "U4", "title": "Business regulation and competition", "imp": 3, "guess": "Aggressively expand antitrust enforcement and regulation of large firms", "actual": "Strengthen antitrust enforcement while simplifying unnecessarily burdensome regulations", "match": false, "why": ""}, {"id": "U5", "title": "Healthcare system", "imp": 4, "guess": "A universal public option with automatic or near-universal coverage while retaining private insurers", "actual": "A universal public option with automatic or near-universal coverage while retaining private insurers", "match": true, "why": "Private market should be highly regulated. Universal public option should be quality enough to compete with private insurance. Universal coverage should be a requirement"}, {"id": "U6", "title": "Legal immigration levels", "imp": 5, "guess": "Increase moderately, particularly through employment-based immigration", "actual": "Reduce overall legal immigration, prioritizing applicants with high economic contributions", "match": false, "why": "US is at a high polarization point with a lack of unifying culture which significantly threatens the country\u2019s cohesion. However low birth rates make immigration vital to future growth. We should prioritize high value skilled English speaking immigrants with democratic values while allowing traditional legal refugees (not economic migrants) into the country to help fill some of the low value jobs citizens usually are too qualified for. Illegal immigration should be quashed and violators deported. Birthright citizenship should be abolished for illegal immigrant parents but for legal immigrants should be upheld."}, {"id": "U7", "title": "Unauthorized immigration and enforcement", "imp": 5, "guess": "A conditional path to legal status for established residents, alongside strong border enforcement and immigration-system reform", "actual": "Enforce borders rigorously and increase removals, with legalization confined to narrowly defined groups", "match": false, "why": "New illegal immigration must be aggressively stopped as top priority. Immediate deportation for any illegal immigrants who are convicted of a crime. Birthright citizenship should be ended if both parents do not have legal status. Deportations of existing residents who consume public benefits. No path to legal residency for those who entered illegally with exceptions for children under age 18."}, {"id": "U8", "title": "Policing and public disorder", "imp": 5, "guess": "Substantially increase police presence, arrests, prosecution, and penalties to restore order", "actual": "Substantially increase police presence, arrests, prosecution, and penalties to restore order", "match": true, "why": "This public disorder is a governmental failure and encroaches on the ability of law abiding citizens to live freely & peacefully. Gov should crackdown and enforce laws even if it means conviction increases substantially. However jail time should ultimately guide ppl to rehabilitation"}, {"id": "U9", "title": "Criminal sentencing and incarceration", "imp": 5, "guess": "Increase penalties and use incarceration more extensively, especially for repeat offenders", "actual": "Increase penalties and use incarceration more extensively, especially for repeat offenders", "match": true, "why": "Time between arrest and jail should be cut down significantly. Laws should be aggressively enforced and penalties should increase for repeat offenders. However incarceration should provide genuine opportunities for rehabilitation and integration back into society for nonviolent criminals."}, {"id": "U10", "title": "Drugs and addiction", "imp": 3, "guess": "Retain broad prohibitions and strengthen enforcement against possession and distribution of dangerous drugs", "actual": "Legalize cannabis, expand treatment and harm reduction, but retain criminal penalties for possession of the most dangerous drugs", "match": false, "why": ""}, {"id": "U11", "title": "Energy and electricity production", "imp": 4, "guess": "Rapidly prioritize clean energy, including regulation and subsidies that accelerate replacing fossil fuels", "actual": "Rapidly prioritize clean energy, including regulation and subsidies that accelerate replacing fossil fuels", "match": true, "why": ""}, {"id": "U12", "title": "Environmental review and infrastructure permitting", "imp": 5, "guess": "Moderately streamline permitting while preserving strong environmental review and legal challenges", "actual": "Maintain existing safeguards but improve agency staffing and processing speed", "match": false, "why": "Burden of proof rests on those seeking to impact the environment. Environmental protections are extremely important even if it means reduced growth"}, {"id": "U13", "title": "K-12 education and school choice", "imp": 5, "guess": "Expand high-performing charters and limited choice programs while reforming traditional public schools", "actual": "Restrict private vouchers and charter expansion, concentrating resources in district public schools", "match": false, "why": "Public schools suffer from increasing lack of funds. Parents should have choice between public schools but there should not be charter schools or private vouchers. If parents are unhappy with public options they can send their child to an accredited private institution"}, {"id": "U14", "title": "College affordability and student loans", "imp": 4, "guess": "Expand targeted grants while limiting excessive borrowing and holding institutions accountable for cost and outcomes", "actual": "I reject the framing of this question", "match": false, "why": "Do not love the options. State gov has an obligation to provide public higher education with the means to access it via scholarships, merit aid, and loans without excessive interest or quick repayment expectation. Student loan debt should not be forgiven but before students are allowed to take on debt there should be multiple meetings and disclosures of the loan and future earning expectations."}, {"id": "U15", "title": "Industrial policy and domestic manufacturing", "imp": 5, "guess": "Use targeted subsidies and public investment for genuinely strategic sectors, with performance requirements", "actual": "Use targeted subsidies and public investment for genuinely strategic sectors, with performance requirements", "match": true, "why": ""}, {"id": "U16", "title": "Abortion policy", "imp": 5, "guess": "Protect abortion access nationally throughout pregnancy, subject to medical regulation", "actual": "Protect abortion access nationally through viability, with later exceptions for serious medical circumstances", "match": false, "why": "Abortion care is a healthcare right. The state should not infringe upon healthcare rights. However abortion should not be allowed after the fetus can live outside the womb."}, {"id": "U17", "title": "Transgender rights and public policy", "imp": 3, "guess": "Protect adult private choices, but adopt relatively restrictive policies for minors, schools, and sex-separated settings", "actual": "Protect adult private choices, but adopt relatively restrictive policies for minors, schools, and sex-separated settings", "match": true, "why": "Adult choice should be respected"}, {"id": "U18", "title": "Voting and election administration", "imp": 3, "guess": "Make voting broadly accessible, with standardized identification and safeguards against administrative error", "actual": "Make voting broadly accessible, with standardized identification and safeguards against administrative error", "match": true, "why": "ID should be required. Pro rank choice voting. However voting should be accessible."}, {"id": "U19", "title": "Federal bureaucracy and civil-service reform", "imp": 3, "guess": "Preserve strong civil-service protections and expand agency capacity and expertise", "actual": "Make it substantially easier to dismiss underperforming federal employees, restructure agencies, and tie advancement to measurable results", "match": false, "why": ""}, {"id": "U20", "title": "Social Security and Medicare fiscal reform", "imp": 4, "guess": "Prioritize slowing benefit growth, means-testing, and adjusting retirement eligibility while protecting poorer recipients", "actual": "Combine additional revenue with gradual adjustments to benefits, eligibility, or payment systems", "match": false, "why": "Society should not be subsidizing old age programs at the expense of future generations. If necessary benefits should be reduced slowly to protect spending on the young. However if tax loopholes were closed this wouldn\u2019t be an issue."}, {"id": "U21", "title": "Defense spending and military strategy", "imp": 4, "guess": "Substantially reduce defense spending and the US military presence overseas", "actual": "Maintain a large, globally capable military, with selective modernization and efficiency reforms", "match": false, "why": "Maintaining a strong military is important but \u201cstrong\u201d means innovation"}, {"id": "U22", "title": "NATO and American alliances", "imp": 5, "guess": "Maintain strong alliances while requiring substantially greater allied defense contributions", "actual": "Maintain strong alliances while requiring substantially greater allied defense contributions", "match": true, "why": "NATO and other alliances are vital to protecting the peace and democracy in our world. The US should be a leader but should not encourage freeloading from allies"}, {"id": "U23", "title": "China, trade, and economic security", "imp": 5, "guess": "Pursue extensive economic decoupling, tariffs, and restrictions to reduce dependence", "actual": "Adopt strong restrictions in strategic technologies while preserving significant ordinary trade", "match": false, "why": ""}, {"id": "U24", "title": "Military aid and foreign conflicts", "imp": 5, "guess": "Provide meaningful assistance where it supports identifiable strategic interests and has a credible prospect of success", "actual": "Provide meaningful assistance where it supports identifiable strategic interests and has a credible prospect of success", "match": true, "why": "Meaningful assistance should be given to democracies even if at decent cost if there is a threat to US strategic interests. US should not protect governments that are undemocratic unless there is a significant national security threat"}, {"id": "U25", "title": "National security and domestic surveillance", "imp": 4, "guess": "Permit narrowly targeted expansions where agencies can demonstrate specific operational needs", "actual": "Permit narrowly targeted expansions where agencies can demonstrate specific operational needs", "match": true, "why": "Important to protect individual rights while also protecting society as a whole. Distinction between surveillance on native citizens and immigrants or naturalized immigrants.  Judicial review should play an important role."}], "axes": [{"id": "econ", "name": "Economic policy", "low": "State-led, egalitarian", "high": "Market-led", "g": -0.07, "a": 0.1}, {"id": "social", "name": "Social policy", "low": "Progressive", "high": "Traditional", "g": 0.6, "a": 0.39}, {"id": "liberty", "name": "Civil liberties", "low": "Order and security first", "high": "Civil liberties first", "g": -0.75, "a": -0.45}, {"id": "constraint", "name": "Political authority", "low": "Majority rule", "high": "Constraints on majorities", "g": 1.75, "a": 1.33}, {"id": "fiscal", "name": "Fiscal orientation", "low": "Spend and invest", "high": "Fiscal restraint", "g": 1.5, "a": 1.0}, {"id": "foreign", "name": "Foreign affairs", "low": "Restraint", "high": "Active engagement", "g": -0.4, "a": 1.0}, {"id": "national", "name": "Whose welfare counts", "low": "Global, cosmopolitan", "high": "Citizens first", "g": 0.25, "a": 1.33}]}</script>
+<script>
+(function () {
+  var D = JSON.parse(document.getElementById('data').textContent);
+  var pct = function (v) { return ((v + 2) / 4 * 100) + '%'; };
+  var fmt = function (v) { return (v > 0 ? '+' : '') + v.toFixed(2); };
+  var esc = function (s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; };
+
+  var chart = document.getElementById('chart');
+  var html = '';
+  D.axes.forEach(function (a) {
+    var gap = Math.abs(a.a - a.g);
+    var lo = Math.min(a.a, a.g), hi = Math.max(a.a, a.g);
+    var ticks = [-2, -1, 0, 1, 2].map(function (t) {
+      return '<span class="tick' + (t === 0 ? ' zero' : '') + '" style="left:' + pct(t) + '"></span>';
+    }).join('');
+    html += '<div class="arow">' +
+      '<div class="ahead"><b>' + esc(a.name) + '</b><span class="gap' + (gap >= 1 ? ' big' : '') + '">guess ' + fmt(a.g) + ' · Julia ' + fmt(a.a) + ' · gap ' + gap.toFixed(2) + '</span></div>' +
+      '<div class="plot"><span class="base"></span>' + ticks +
+      '<span class="span" style="left:' + pct(lo) + ';width:calc(' + pct(hi) + ' - ' + pct(lo) + ')"></span>' +
+      '<button class="dot g" style="left:' + pct(a.g) + '" data-tip="Your guess: ' + esc(a.name) + ' ' + fmt(a.g) + '" aria-label="Your guess, ' + esc(a.name) + ', ' + fmt(a.g) + '"><i></i></button>' +
+      '<button class="dot a" style="left:' + pct(a.a) + '" data-tip="Julia: ' + esc(a.name) + ' ' + fmt(a.a) + '" aria-label="Julia, ' + esc(a.name) + ', ' + fmt(a.a) + '"><i></i></button>' +
+      '</div>' +
+      '<div class="ends"><span>' + esc(a.low) + '</span><span>' + esc(a.high) + '</span></div>' +
+      '</div>';
+  });
+  html += '<div class="scale">' + [-2, -1, 0, 1, 2].map(function (t) {
+    return '<span style="left:' + pct(t) + '">' + (t > 0 ? '+' + t : t) + '</span>';
+  }).join('') + '</div>';
+  chart.innerHTML = html;
+
+  var tip = document.createElement('div');
+  tip.className = 'tip'; tip.hidden = true; chart.appendChild(tip);
+  function show(el) {
+    var r = el.getBoundingClientRect(), c = chart.getBoundingClientRect();
+    tip.textContent = el.getAttribute('data-tip');
+    tip.style.left = (r.left + r.width / 2 - c.left) + 'px';
+    tip.style.top = (r.top - c.top - 4) + 'px';
+    tip.hidden = false;
+  }
+  chart.querySelectorAll('.dot').forEach(function (el) {
+    el.addEventListener('mouseenter', function () { show(el); });
+    el.addEventListener('focus', function () { show(el); });
+    el.addEventListener('mouseleave', function () { tip.hidden = true; });
+    el.addEventListener('blur', function () { tip.hidden = true; });
+  });
+
+  var tbody = document.getElementById('tbody');
+  function render(f) {
+    tbody.innerHTML = D.rows.filter(function (r) {
+      return f === 'all' || (f === 'miss' && !r.match) || (f === 'hit' && r.match) || (f === 'five' && r.imp === 5);
+    }).map(function (r) {
+      return '<tr><td><span class="code qid">' + r.id + '</span> ' + esc(r.title) + '</td>' +
+        '<td class="num">' + (r.imp ? r.imp + '/5' : '<span class="muted">none</span>') + '</td>' +
+        '<td>' + esc(r.guess) + '</td>' +
+        '<td>' + esc(r.actual) + (r.why ? '<p class="why">"' + esc(r.why) + '"</p>' : '') + '</td>' +
+        '<td><span class="pill ' + (r.match ? 'y">Match' : 'n">Miss') + '</span></td></tr>';
+    }).join('');
+    document.querySelectorAll('.filters button').forEach(function (b) {
+      b.setAttribute('aria-pressed', b.getAttribute('data-f') === f ? 'true' : 'false');
+    });
+    try { localStorage.setItem('guess-filter', f); } catch (e) {}
+  }
+  document.querySelectorAll('.filters button').forEach(function (b) {
+    b.addEventListener('click', function () { render(b.getAttribute('data-f')); });
+  });
+  var start = 'miss';
+  try { start = localStorage.getItem('guess-filter') || 'miss'; } catch (e) {}
+  render(start);
+})();
+</script>
+</body></html>
