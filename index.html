@@ -255,6 +255,7 @@ pre.blob { font-family: var(--font-code); font-size: 12px; background: var(--pap
     state.updated_at = Date.now();
     clearTimeout(saveTimer);
     saveTimer = setTimeout(() => {
+      saveTimer = null;
       try { localStorage.setItem(DRAFT_KEY, JSON.stringify(state)); } catch (e) {}
       if (mode !== "account") setSaved(mode === "browser-only" ? "Saved in this browser only" : "Saved in this browser");
     }, 300);
@@ -449,6 +450,14 @@ pre.blob { font-family: var(--font-code); font-size: 12px; background: var(--pap
   $("reviewBack").addEventListener("click", () => go(state.i));
   $("rname").addEventListener("input", (e) => { state.name = e.target.value; saveDraft(); });
   $("submitBtn").addEventListener("click", submit);
+  // Save right away when the tab is hidden or closed, so a pending save is not lost.
+  function flushDraft() {
+    if (!saveTimer) return;
+    clearTimeout(saveTimer); saveTimer = null;
+    try { localStorage.setItem(DRAFT_KEY, JSON.stringify(state)); } catch (e) {}
+  }
+  document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden") flushDraft(); });
+  window.addEventListener("pagehide", flushDraft);
   $("copyBtn").addEventListener("click", copy);
 
   function refreshResume() {
