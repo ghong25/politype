@@ -224,9 +224,9 @@ pre.blob { font-family: var(--font-code); font-size: 12px; background: var(--pap
     </div>
     <p class="status" id="submitStatus" role="status"></p>
     <div class="field" id="copyWrap" hidden>
-      <span class="label">Your answers <span class="hint">Copy this and send it to the person who shared the quiz</span></span>
+      <span class="label">Your answers <span class="hint">Text or copy this and send it to the person who shared the quiz</span></span>
       <pre class="blob" id="blob"></pre>
-      <div class="nav"><button class="btn ghost" id="copyBtn" type="button">Copy answers</button></div>
+      <div class="nav"><button class="btn" id="shareBtn" type="button" hidden>Text my answers</button><button class="btn ghost" id="copyBtn" type="button">Copy answers</button></div>
     </div>
   </section>
 </div>
@@ -382,7 +382,7 @@ pre.blob { font-family: var(--font-code); font-size: 12px; background: var(--pap
     $("rname").value = state.name || "";
     $("submitStatus").className = "status";
     $("submitStatus").textContent = mode === "browser-only"
-      ? `${NO_SEND} After you press Send, copy your answers and send them to the person who shared the quiz.`
+      ? `${NO_SEND} After you press Send, ${canShare ? "text or copy" : "copy"} your answers and send them to the person who shared the quiz.`
       : (submittedAt ? `You sent answers on ${new Date(submittedAt).toLocaleDateString()}. Sending again replaces them.` : "");
     show("review");
   }
@@ -424,7 +424,14 @@ pre.blob { font-family: var(--font-code); font-size: 12px; background: var(--pap
         }
       }
     }
-    $("submitStatus").textContent = `${NO_SEND} Copy them below and send them to the person who shared the quiz.`;
+    $("submitStatus").textContent = `${NO_SEND} ${canShare ? "Text or copy" : "Copy"} them below and send them to the person who shared the quiz.`;
+  }
+  // Opens the phone's share sheet (Messages, email, and so on) with the answers filled in.
+  const canShare = typeof navigator.share === "function";
+  $("shareBtn").hidden = !canShare;
+  async function share() {
+    try { await navigator.share({ text: $("blob").textContent }); }
+    catch (e) { if (e?.name !== "AbortError") copy(); }
   }
   async function copy() {
     const text = $("blob").textContent;
@@ -459,6 +466,7 @@ pre.blob { font-family: var(--font-code); font-size: 12px; background: var(--pap
   document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden") flushDraft(); });
   window.addEventListener("pagehide", flushDraft);
   $("copyBtn").addEventListener("click", copy);
+  $("shareBtn").addEventListener("click", share);
 
   function refreshResume() {
     if (!questions.length) return;
