@@ -1,0 +1,2315 @@
+{
+  "version": 1,
+  "title": "Political Philosophy and Policy Questionnaire",
+  "importance_scale": {
+    "1": "Barely matters to me",
+    "3": "Matters",
+    "5": "A defining issue for me"
+  },
+  "parts": [
+    {
+      "id": "P",
+      "title": "Political philosophy",
+      "rounds": [
+        {
+          "number": 1,
+          "title": "Foundational political principles",
+          "questions": [
+            {
+              "id": "P1",
+              "number": 1,
+              "title": "What is the primary purpose of government?",
+              "options": [
+                {
+                  "id": "P1.a",
+                  "text": "Protect individual rights and freedoms",
+                  "catch_all": false
+                },
+                {
+                  "id": "P1.b",
+                  "text": "Promote collective welfare and substantive equality",
+                  "catch_all": false
+                },
+                {
+                  "id": "P1.c",
+                  "text": "Preserve social order, stability, and institutions",
+                  "catch_all": false
+                },
+                {
+                  "id": "P1.d",
+                  "text": "Enable individuals and communities to flourish",
+                  "catch_all": false
+                },
+                {
+                  "id": "P1.e",
+                  "text": "A combination or different principle",
+                  "catch_all": true
+                }
+              ],
+              "context": "",
+              "prompt": "What is the primary purpose of government?",
+              "explain": "prompted"
+            },
+            {
+              "id": "P2",
+              "number": 2,
+              "title": "How do you view economic inequality?",
+              "options": [
+                {
+                  "id": "P2.a",
+                  "text": "Not inherently problematic if wealth is acquired fairly",
+                  "catch_all": false
+                },
+                {
+                  "id": "P2.b",
+                  "text": "Acceptable, but excessive inequality threatens opportunity and society",
+                  "catch_all": false
+                },
+                {
+                  "id": "P2.c",
+                  "text": "Fundamentally unjust when people have very different living standards",
+                  "catch_all": false
+                },
+                {
+                  "id": "P2.d",
+                  "text": "Necessary or beneficial to reward effort, innovation, and ability",
+                  "catch_all": false
+                },
+                {
+                  "id": "P2.e",
+                  "text": "Depends on how inequality arises",
+                  "catch_all": false
+                },
+                {
+                  "id": "P2.x",
+                  "text": "I reject the framing of this question",
+                  "catch_all": true,
+                  "added": true
+                }
+              ],
+              "context": "",
+              "prompt": "How do you view economic inequality?",
+              "explain": "prompted"
+            },
+            {
+              "id": "P3",
+              "number": 3,
+              "title": "When individual freedom conflicts with collective welfare, which should generally take precedence?",
+              "options": [
+                {
+                  "id": "P3.a",
+                  "text": "Individual freedom, except to prevent direct harm to others",
+                  "catch_all": false
+                },
+                {
+                  "id": "P3.b",
+                  "text": "Individual freedom, but with reasonable public-interest restrictions",
+                  "catch_all": false
+                },
+                {
+                  "id": "P3.c",
+                  "text": "Neither automatically; the circumstances determine the answer",
+                  "catch_all": false
+                },
+                {
+                  "id": "P3.d",
+                  "text": "Collective welfare when the social benefits are substantial",
+                  "catch_all": false
+                },
+                {
+                  "id": "P3.e",
+                  "text": "Collective welfare and social obligations generally",
+                  "catch_all": false
+                },
+                {
+                  "id": "P3.x",
+                  "text": "I reject the framing of this question",
+                  "catch_all": true,
+                  "added": true
+                }
+              ],
+              "context": "",
+              "prompt": "When individual freedom conflicts with collective welfare, which should generally take precedence?",
+              "explain": "optional"
+            },
+            {
+              "id": "P4",
+              "number": 4,
+              "title": "How should society approach longstanding traditions and institutions?",
+              "options": [
+                {
+                  "id": "P4.a",
+                  "text": "Preserve them unless there is a compelling reason to change",
+                  "catch_all": false
+                },
+                {
+                  "id": "P4.b",
+                  "text": "Reform them gradually, respecting accumulated experience",
+                  "catch_all": false
+                },
+                {
+                  "id": "P4.c",
+                  "text": "Judge them on their merits, without presuming preservation or change",
+                  "catch_all": false
+                },
+                {
+                  "id": "P4.d",
+                  "text": "Actively reform those that perpetuate inequality or restrict freedom",
+                  "catch_all": false
+                },
+                {
+                  "id": "P4.e",
+                  "text": "Favor fundamental transformation over incremental reform",
+                  "catch_all": false
+                },
+                {
+                  "id": "P4.x",
+                  "text": "I reject the framing of this question",
+                  "catch_all": true,
+                  "added": true
+                }
+              ],
+              "context": "",
+              "prompt": "How should society approach longstanding traditions and institutions?",
+              "explain": "prompted"
+            },
+            {
+              "id": "P5",
+              "number": 5,
+              "title": "Which statement best captures your conception of justice?",
+              "options": [
+                {
+                  "id": "P5.a",
+                  "text": "People receiving what they have legitimately earned",
+                  "catch_all": false
+                },
+                {
+                  "id": "P5.b",
+                  "text": "Everyone having genuinely equal opportunities to succeed",
+                  "catch_all": false
+                },
+                {
+                  "id": "P5.c",
+                  "text": "Ensuring that everyone has access to a dignified standard of living",
+                  "catch_all": false
+                },
+                {
+                  "id": "P5.d",
+                  "text": "Protecting equal rights and impartial treatment under the law",
+                  "catch_all": false
+                },
+                {
+                  "id": "P5.e",
+                  "text": "Correcting structural disadvantages and unequal power",
+                  "catch_all": false
+                },
+                {
+                  "id": "P5.x",
+                  "text": "I reject the framing of this question",
+                  "catch_all": true,
+                  "added": true
+                }
+              ],
+              "context": "",
+              "prompt": "Which statement best captures your conception of justice?",
+              "explain": "optional"
+            }
+          ]
+        },
+        {
+          "number": 2,
+          "title": "When principles collide",
+          "questions": [
+            {
+              "id": "P6",
+              "number": 6,
+              "title": "Redistribution and taxation",
+              "options": [
+                {
+                  "id": "P6.a",
+                  "text": "Yes, distributive justice is worth a meaningful efficiency cost",
+                  "catch_all": false
+                },
+                {
+                  "id": "P6.b",
+                  "text": "Yes, provided benefits demonstrably outweigh economic costs",
+                  "catch_all": false
+                },
+                {
+                  "id": "P6.c",
+                  "text": "Only modestly; growth, incentives, and property rights deserve greater weight",
+                  "catch_all": false
+                },
+                {
+                  "id": "P6.d",
+                  "text": "Generally no; government should address poverty without targeting inequality",
+                  "catch_all": false
+                },
+                {
+                  "id": "P6.e",
+                  "text": "Another approach or important distinction",
+                  "catch_all": true
+                }
+              ],
+              "context": "Suppose a country has strong economic growth and relatively efficient markets, but wealth inequality is very high. Much of that inequality results from legally acquired wealth, inheritance, and compounding investment returns. There is credible evidence that higher taxes on the wealthy could substantially improve public services and opportunities for poorer citizens, but would modestly reduce investment and growth.",
+              "prompt": "Would you support significantly higher taxation and redistribution?",
+              "explain": "optional"
+            },
+            {
+              "id": "P7",
+              "number": 7,
+              "title": "Markets versus government",
+              "options": [
+                {
+                  "id": "P7.a",
+                  "text": "Markets should be the default, with government correcting identifiable failures",
+                  "catch_all": false
+                },
+                {
+                  "id": "P7.b",
+                  "text": "A mixed economy, with substantial public provision and regulation where warranted",
+                  "catch_all": false
+                },
+                {
+                  "id": "P7.c",
+                  "text": "Universal public provision should be the default for essential services",
+                  "catch_all": false
+                },
+                {
+                  "id": "P7.d",
+                  "text": "The public/private distinction matters less than demonstrated institutional effectiveness",
+                  "catch_all": false
+                },
+                {
+                  "id": "P7.e",
+                  "text": "Another approach",
+                  "catch_all": true
+                }
+              ],
+              "context": "Consider healthcare, housing, education, and infrastructure. Markets can create powerful incentives and allocate resources efficiently, but they can also suffer from market failures, unequal access, and coordination problems.",
+              "prompt": "Which broad approach do you favor?",
+              "explain": "optional"
+            },
+            {
+              "id": "P8",
+              "number": 8,
+              "title": "Individual liberty and paternalism",
+              "options": [
+                {
+                  "id": "P8.a",
+                  "text": "No; competent adults should be free to make harmful choices",
+                  "catch_all": false
+                },
+                {
+                  "id": "P8.b",
+                  "text": "Generally no, but some narrowly tailored restrictions are acceptable",
+                  "catch_all": false
+                },
+                {
+                  "id": "P8.c",
+                  "text": "Possibly; the magnitude of the benefits and costs determines the answer",
+                  "catch_all": false
+                },
+                {
+                  "id": "P8.d",
+                  "text": "Generally yes if restrictions have substantial proven benefits",
+                  "catch_all": false
+                },
+                {
+                  "id": "P8.e",
+                  "text": "Another approach",
+                  "catch_all": true
+                }
+              ],
+              "context": "Suppose robust evidence shows that a voluntary adult behavior creates substantial risks to the person engaging in it, but only limited direct harm to others. Restricting the behavior would improve aggregate health and welfare.",
+              "prompt": "Should the government restrict it?",
+              "explain": "optional"
+            },
+            {
+              "id": "P9",
+              "number": 9,
+              "title": "Democracy versus expertise",
+              "options": [
+                {
+                  "id": "P9.a",
+                  "text": "The elected government should prevail; democratic accountability is paramount",
+                  "catch_all": false
+                },
+                {
+                  "id": "P9.b",
+                  "text": "The government should usually prevail, except within tightly defined institutional safeguards",
+                  "catch_all": false
+                },
+                {
+                  "id": "P9.c",
+                  "text": "It depends on the institution's mandate, the evidence, and the seriousness of the harm",
+                  "catch_all": false
+                },
+                {
+                  "id": "P9.d",
+                  "text": "The independent institution should block the policy if the evidence is sufficiently strong",
+                  "catch_all": false
+                },
+                {
+                  "id": "P9.e",
+                  "text": "Another approach",
+                  "catch_all": true
+                }
+              ],
+              "context": "Imagine a democratically elected government supports a popular economic policy that the overwhelming majority of relevant experts believe will cause substantial long-term harm. An independent institution has legal authority to block it, but its members are unelected.",
+              "prompt": "What should happen?",
+              "explain": "optional"
+            },
+            {
+              "id": "P10",
+              "number": 10,
+              "title": "Equality of opportunity versus equality of outcomes",
+              "options": [
+                {
+                  "id": "P10.a",
+                  "text": "Focus on protecting equal rights and fair rules; unequal outcomes aren't intrinsically unjust",
+                  "catch_all": false
+                },
+                {
+                  "id": "P10.b",
+                  "text": "Continue improving opportunities and social mobility, without targeting outcome parity",
+                  "catch_all": false
+                },
+                {
+                  "id": "P10.c",
+                  "text": "Actively reduce extreme disparities in outcomes through redistribution and structural reform",
+                  "catch_all": false
+                },
+                {
+                  "id": "P10.d",
+                  "text": "Persistent group disparities justify interventions specifically designed to reduce those gaps",
+                  "catch_all": false
+                },
+                {
+                  "id": "P10.e",
+                  "text": "Another approach",
+                  "catch_all": true
+                }
+              ],
+              "context": "Imagine a society has eliminated most legally enforced discrimination and greatly expanded access to quality education and healthcare, yet significant inequalities persist across socioeconomic groups and generations.",
+              "prompt": "What does justice require next?",
+              "explain": "prompted"
+            }
+          ]
+        },
+        {
+          "number": 3,
+          "title": "Rights, equality, culture, and the limits of liberalism",
+          "questions": [
+            {
+              "id": "P11",
+              "number": 11,
+              "title": "Are individual rights inviolable?",
+              "options": [
+                {
+                  "id": "P11.a",
+                  "text": "No. Certain rights should not be violated, even to maximize welfare.",
+                  "catch_all": false
+                },
+                {
+                  "id": "P11.b",
+                  "text": "Probably not, although sufficiently catastrophic consequences could justify exceptions.",
+                  "catch_all": false
+                },
+                {
+                  "id": "P11.c",
+                  "text": "Possibly. Privacy is a powerful presumption, but the consequences ultimately determine permissibility.",
+                  "catch_all": false
+                },
+                {
+                  "id": "P11.d",
+                  "text": "Yes. If the stipulated welfare gains genuinely outweigh the harms, it is justified.",
+                  "catch_all": false
+                },
+                {
+                  "id": "P11.e",
+                  "text": "I reject the framing or would answer differently.",
+                  "catch_all": true
+                }
+              ],
+              "context": "Imagine that a government could secretly violate the privacy of a small group of innocent citizens. We stipulate that the surveillance would prevent significant harm to others, would never become public, and would not create an institutional precedent. The welfare benefits clearly exceed the direct harms to those surveilled.",
+              "prompt": "Would this be morally permissible?",
+              "explain": "optional"
+            },
+            {
+              "id": "P12",
+              "number": 12,
+              "title": "Whose welfare matters most?",
+              "options": [
+                {
+                  "id": "P12.a",
+                  "text": "Policy A. Improving the position of the worst-off deserves special priority.",
+                  "catch_all": false
+                },
+                {
+                  "id": "P12.b",
+                  "text": "Probably A, depending on the size of the overall welfare loss.",
+                  "catch_all": false
+                },
+                {
+                  "id": "P12.c",
+                  "text": "Probably B, depending on the relative welfare gains.",
+                  "catch_all": false
+                },
+                {
+                  "id": "P12.d",
+                  "text": "Policy B. Higher aggregate welfare is the decisive consideration here.",
+                  "catch_all": false
+                },
+                {
+                  "id": "P12.e",
+                  "text": "Neither; my decision depends on another moral consideration.",
+                  "catch_all": true
+                }
+              ],
+              "context": "Suppose two policies are available. Policy A increases the welfare of the poorest 20% substantially, but reduces total societal welfare somewhat. Policy B generates greater total welfare, with most of the gains going to middle- and upper-income groups, while leaving the poorest 20% no worse off. Assume the outcomes are known with high confidence.",
+              "prompt": "Which would you choose?",
+              "explain": "optional"
+            },
+            {
+              "id": "P13",
+              "number": 13,
+              "title": "Cultural liberalism and social norms",
+              "options": [
+                {
+                  "id": "P13.a",
+                  "text": "Strongly protect the minority's freedom and reject state enforcement of conventional morality.",
+                  "catch_all": false
+                },
+                {
+                  "id": "P13.b",
+                  "text": "Protect legal freedom, but allow communities considerable latitude to preserve their norms through voluntary institutions.",
+                  "catch_all": false
+                },
+                {
+                  "id": "P13.c",
+                  "text": "Balance personal autonomy and social cohesion, potentially permitting some legal restrictions.",
+                  "catch_all": false
+                },
+                {
+                  "id": "P13.d",
+                  "text": "The state can legitimately enforce widely shared moral norms to preserve society.",
+                  "catch_all": false
+                },
+                {
+                  "id": "P13.e",
+                  "text": "A different distinction is needed.",
+                  "catch_all": true
+                }
+              ],
+              "context": "Suppose a longstanding social norm concerning sexuality, religion, or family structure is widely supported within a community. A minority wishes to live differently. Its members' conduct is consensual and causes no direct harm to others, but most of the community believes it undermines shared values and social cohesion.",
+              "prompt": "What should the state's position be?",
+              "explain": "optional"
+            },
+            {
+              "id": "P14",
+              "number": 14,
+              "title": "Group disadvantage and individual fairness",
+              "options": [
+                {
+                  "id": "P14.a",
+                  "text": "Support the preference; reducing structural disadvantage can justify unequal individual treatment.",
+                  "catch_all": false
+                },
+                {
+                  "id": "P14.b",
+                  "text": "Support narrowly tailored preferences in some circumstances, alongside upstream reforms.",
+                  "catch_all": false
+                },
+                {
+                  "id": "P14.c",
+                  "text": "Prefer class-based or individual-disadvantage measures rather than demographic preferences.",
+                  "catch_all": false
+                },
+                {
+                  "id": "P14.d",
+                  "text": "Oppose differential treatment based on group identity; equal individual treatment is paramount.",
+                  "catch_all": false
+                },
+                {
+                  "id": "P14.e",
+                  "text": "I would use another framework.",
+                  "catch_all": true
+                }
+              ],
+              "context": "Imagine a competitive university admissions system in which historical discrimination has created substantial differences in preparation and opportunity between demographic groups. A policy giving qualified applicants from disadvantaged groups some preference would improve representation and possibly long-term mobility, but some individually better-qualified applicants would lose places.",
+              "prompt": "How do you view this trade-off?",
+              "explain": "prompted"
+            },
+            {
+              "id": "P15",
+              "number": 15,
+              "title": "Immigration, national obligations, and universal welfare",
+              "options": [
+                {
+                  "id": "P15.a",
+                  "text": "Liberalize substantially; foreign nationals' welfare should count just as much as citizens' welfare.",
+                  "catch_all": false
+                },
+                {
+                  "id": "P15.b",
+                  "text": "Favor substantial immigration but give additional weight to domestic adjustment costs and political sustainability.",
+                  "catch_all": false
+                },
+                {
+                  "id": "P15.c",
+                  "text": "Favor moderate immigration, prioritizing citizens' interests while recognizing benefits to migrants.",
+                  "catch_all": false
+                },
+                {
+                  "id": "P15.d",
+                  "text": "National governments have a primary obligation to their own citizens, even at substantial cost to global welfare.",
+                  "catch_all": false
+                },
+                {
+                  "id": "P15.e",
+                  "text": "A different framework or distinction matters more.",
+                  "catch_all": true
+                }
+              ],
+              "context": "Suppose substantially increasing immigration would improve global economic welfare and greatly benefit migrants, while also creating meaningful short-term adjustment costs for some domestic workers and communities. Assume a moderate expansion would deliver smaller benefits with fewer adjustment costs.",
+              "prompt": "Which principle would guide your decision?",
+              "explain": "prompted"
+            }
+          ]
+        },
+        {
+          "number": 4,
+          "title": "Testing the limits of your principles",
+          "questions": [
+            {
+              "id": "P16",
+              "number": 16,
+              "title": "Do you give special moral weight to the worst-off?",
+              "options": [
+                {
+                  "id": "P16.a",
+                  "text": "Yes. An equal benefit matters morally more when it goes to someone worse off.",
+                  "catch_all": false
+                },
+                {
+                  "id": "P16.b",
+                  "text": "I lean yes, but only within limits.",
+                  "catch_all": false
+                },
+                {
+                  "id": "P16.c",
+                  "text": "No. Equal gains in actual well-being have equal moral value, regardless of who receives them.",
+                  "catch_all": false
+                },
+                {
+                  "id": "P16.d",
+                  "text": "Neither; other factors determine who should benefit.",
+                  "catch_all": false
+                },
+                {
+                  "id": "P16.e",
+                  "text": "I reject a premise or have a different interpretation.",
+                  "catch_all": true
+                }
+              ],
+              "context": "Imagine two people: one is severely disadvantaged and the other already enjoys a very high level of well-being. You can give either person an improvement of exactly 10 units of actual well-being—not dollars, but genuine human flourishing. The gains are equally certain and involve no rights violations. Only one can benefit.",
+              "prompt": "Does the disadvantaged person's improvement have greater moral value?",
+              "explain": "optional"
+            },
+            {
+              "id": "P17",
+              "number": 17,
+              "title": "What makes a right fundamental?",
+              "options": [
+                {
+                  "id": "P17.a",
+                  "text": "Human dignity and autonomy: people must not be treated merely as instruments.",
+                  "catch_all": false
+                },
+                {
+                  "id": "P17.b",
+                  "text": "Natural or inherent rights that exist independently of government.",
+                  "catch_all": false
+                },
+                {
+                  "id": "P17.c",
+                  "text": "A fair social contract that free and equal citizens could reasonably accept.",
+                  "catch_all": false
+                },
+                {
+                  "id": "P17.d",
+                  "text": "Rights are indispensable to a functioning liberal society, even when particular violations have benefits.",
+                  "catch_all": false
+                },
+                {
+                  "id": "P17.e",
+                  "text": "There is no single foundation; several moral considerations justify rights.",
+                  "catch_all": false
+                },
+                {
+                  "id": "P17.x",
+                  "text": "I reject the framing of this question",
+                  "catch_all": true,
+                  "added": true
+                }
+              ],
+              "context": "Rights can conflict with other rights, and not all claims to liberty can be absolute. Consider freedom of speech, privacy, bodily autonomy, private property, and freedom of association.",
+              "prompt": "What is the deepest justification for giving certain rights special protection?",
+              "explain": "optional"
+            },
+            {
+              "id": "P18",
+              "number": 18,
+              "title": "Can economic liberty be restricted for social welfare?",
+              "options": [
+                {
+                  "id": "P18.a",
+                  "text": "No. Property rights matter, but ordinary taxation is not comparable to violating fundamental civil liberties.",
+                  "catch_all": false
+                },
+                {
+                  "id": "P18.b",
+                  "text": "There is a meaningful rights concern, but it can be outweighed by sufficiently strong public interests.",
+                  "catch_all": false
+                },
+                {
+                  "id": "P18.c",
+                  "text": "Yes. Legitimately acquired private property has strong moral protections against redistribution.",
+                  "catch_all": false
+                },
+                {
+                  "id": "P18.d",
+                  "text": "The answer depends principally on how wealth was acquired and what obligations ownership entails.",
+                  "catch_all": false
+                },
+                {
+                  "id": "P18.e",
+                  "text": "Another distinction is essential.",
+                  "catch_all": true
+                }
+              ],
+              "context": "Suppose evidence convincingly shows that a higher tax on very wealthy individuals would significantly improve healthcare and education for disadvantaged children, with a modest efficiency cost. The tax is prospective, lawful, and nondiscriminatory.",
+              "prompt": "Is there a fundamental rights-based objection to this policy, even if its welfare benefits exceed its costs?",
+              "explain": "optional"
+            },
+            {
+              "id": "P19",
+              "number": 19,
+              "title": "Democratic legitimacy versus constitutional rights",
+              "options": [
+                {
+                  "id": "P19.a",
+                  "text": "Absolutely. Fundamental rights constrain even overwhelming democratic majorities.",
+                  "catch_all": false
+                },
+                {
+                  "id": "P19.b",
+                  "text": "Yes, although courts should ordinarily exercise considerable institutional restraint.",
+                  "catch_all": false
+                },
+                {
+                  "id": "P19.c",
+                  "text": "Only if the constitutional text clearly and unambiguously forbids the restriction.",
+                  "catch_all": false
+                },
+                {
+                  "id": "P19.d",
+                  "text": "No. The democratic majority should ultimately determine the law.",
+                  "catch_all": false
+                },
+                {
+                  "id": "P19.e",
+                  "text": "Another approach.",
+                  "catch_all": true
+                }
+              ],
+              "context": "Imagine a large democratic majority passes a law prohibiting peaceful criticism of the government. The law is enacted through proper democratic procedures, and reliable polling establishes widespread public support. An independent constitutional court has authority to invalidate it.",
+              "prompt": "Should the court strike it down?",
+              "explain": "optional"
+            },
+            {
+              "id": "P20",
+              "number": 20,
+              "title": "Universal moral worth versus obligations to citizens",
+              "options": [
+                {
+                  "id": "P20.a",
+                  "text": "B. Equal moral worth means citizenship should not override much greater humanitarian gains.",
+                  "catch_all": false
+                },
+                {
+                  "id": "P20.b",
+                  "text": "Probably B, but governments may legitimately place some additional weight on citizens.",
+                  "catch_all": false
+                },
+                {
+                  "id": "P20.c",
+                  "text": "Probably A. Governments have special obligations to citizens, even when the global welfare gains elsewhere are larger.",
+                  "catch_all": false
+                },
+                {
+                  "id": "P20.d",
+                  "text": "A. The public resources of a country should primarily benefit its own citizens.",
+                  "catch_all": false
+                },
+                {
+                  "id": "P20.e",
+                  "text": "I would distinguish the obligations or funding sources differently.",
+                  "catch_all": true
+                }
+              ],
+              "context": "Suppose a government has $10 billion available. Option A funds domestic programs providing moderate benefits to its citizens. Option B funds highly effective international programs that provide substantially greater improvements in human well-being to much poorer foreign nationals. Neither option creates security threats, political instability, or future economic costs.",
+              "prompt": "Which would you favor?",
+              "explain": "prompted"
+            }
+          ]
+        },
+        {
+          "number": 5,
+          "title": "Institutions, nationalism, and social policy",
+          "questions": [
+            {
+              "id": "P21",
+              "number": 21,
+              "title": "Judicial power and democratic accountability",
+              "options": [
+                {
+                  "id": "P21.a",
+                  "text": "Strong judicial review, including robust protection of rights against majorities",
+                  "catch_all": false
+                },
+                {
+                  "id": "P21.b",
+                  "text": "Strong judicial protection of core rights, but restraint on contested policy questions",
+                  "catch_all": false
+                },
+                {
+                  "id": "P21.c",
+                  "text": "Judicial review should be narrow; elected institutions deserve substantial deference",
+                  "catch_all": false
+                },
+                {
+                  "id": "P21.d",
+                  "text": "Legislative supremacy should generally prevail over judicial interpretations",
+                  "catch_all": false
+                },
+                {
+                  "id": "P21.e",
+                  "text": "Another model or distinction",
+                  "catch_all": true
+                }
+              ],
+              "context": "A supreme court repeatedly invalidates laws passed by democratically elected legislatures. Some rulings protect fundamental freedoms; others concern contested interpretations of constitutional language on which reasonable legal experts disagree. The judges have long tenures and limited democratic accountability.",
+              "prompt": "What is your preferred balance between judicial authority and democratic government?",
+              "explain": "optional"
+            },
+            {
+              "id": "P22",
+              "number": 22,
+              "title": "Nationalism, patriotism, and political identity",
+              "options": [
+                {
+                  "id": "P22.a",
+                  "text": "Shared constitutional principles, civic equality, and democratic institutions are sufficient",
+                  "catch_all": false
+                },
+                {
+                  "id": "P22.b",
+                  "text": "Primarily civic identity, supported by some shared national traditions and symbols",
+                  "catch_all": false
+                },
+                {
+                  "id": "P22.c",
+                  "text": "A substantive national culture and historical identity are important alongside civic principles",
+                  "catch_all": false
+                },
+                {
+                  "id": "P22.d",
+                  "text": "A strong common cultural identity should be actively cultivated and preserved by the state",
+                  "catch_all": false
+                },
+                {
+                  "id": "P22.e",
+                  "text": "National identity is not particularly important; political cooperation can rest on broader universal commitments",
+                  "catch_all": false
+                },
+                {
+                  "id": "P22.x",
+                  "text": "I reject the framing of this question",
+                  "catch_all": true,
+                  "added": true
+                }
+              ],
+              "context": "Imagine a prosperous, diverse country whose citizens have different religions, ethnic backgrounds, and cultural traditions. Some argue that a shared national identity is necessary for social trust and democratic solidarity; others think commitment to common laws and institutions is sufficient.",
+              "prompt": "What should hold a political community together?",
+              "explain": "optional"
+            },
+            {
+              "id": "P23",
+              "number": 23,
+              "title": "The welfare state and positive rights",
+              "options": [
+                {
+                  "id": "P23.a",
+                  "text": "Access to essential services is a fundamental right grounded in dignity and autonomy",
+                  "catch_all": false
+                },
+                {
+                  "id": "P23.b",
+                  "text": "There is a strong public obligation to guarantee a decent minimum, though not every service is an absolute right",
+                  "catch_all": false
+                },
+                {
+                  "id": "P23.c",
+                  "text": "Government should ensure basic opportunities and a safety net, while relying substantially on markets",
+                  "catch_all": false
+                },
+                {
+                  "id": "P23.d",
+                  "text": "Public provision should depend mainly on evidence of welfare gains, rather than an independent entitlement",
+                  "catch_all": false
+                },
+                {
+                  "id": "P23.e",
+                  "text": "Another position or distinction",
+                  "catch_all": true
+                }
+              ],
+              "context": "Consider healthcare, education, housing, and income security. Apart from redistribution, a separate philosophical question is whether people have a moral entitlement to essential services even when providing them is expensive.",
+              "prompt": "Which approach best captures your view?",
+              "explain": "optional"
+            },
+            {
+              "id": "P24",
+              "number": 24,
+              "title": "Religion, pluralism, and public institutions",
+              "options": [
+                {
+                  "id": "P24.a",
+                  "text": "Broad accommodation; voluntary religious communities should generally govern their own affairs",
+                  "catch_all": false
+                },
+                {
+                  "id": "P24.b",
+                  "text": "Broad accommodation for adults, but stronger common standards for institutions educating children",
+                  "catch_all": false
+                },
+                {
+                  "id": "P24.c",
+                  "text": "Religious freedom deserves protection, but all public-facing institutions should meet robust secular equality standards",
+                  "catch_all": false
+                },
+                {
+                  "id": "P24.d",
+                  "text": "Common secular civic norms should generally prevail when religious practices conflict with them",
+                  "catch_all": false
+                },
+                {
+                  "id": "P24.e",
+                  "text": "Another approach or distinction",
+                  "catch_all": true
+                }
+              ],
+              "context": "Suppose a religious community operates schools and charities according to its beliefs. Some practices conflict with prevailing secular norms concerning gender roles, sexuality, or religious instruction, but the community claims freedom of religion and association. Assume no coercion or abuse is involved.",
+              "prompt": "How much accommodation should liberal society provide?",
+              "explain": "optional"
+            },
+            {
+              "id": "P25",
+              "number": 25,
+              "title": "Foreign policy: Liberal ideals versus strategic restraint",
+              "options": [
+                {
+                  "id": "P25.a",
+                  "text": "Defending universal human rights should take priority despite substantial national costs",
+                  "catch_all": false
+                },
+                {
+                  "id": "P25.b",
+                  "text": "Apply meaningful pressure, but balance it with security interests and the likely effectiveness of sanctions",
+                  "catch_all": false
+                },
+                {
+                  "id": "P25.c",
+                  "text": "Favor diplomatic engagement and targeted measures; avoid broad confrontations without clear prospects for improvement",
+                  "catch_all": false
+                },
+                {
+                  "id": "P25.d",
+                  "text": "Prioritize national interests and stability; foreign human rights concerns should rarely override them",
+                  "catch_all": false
+                },
+                {
+                  "id": "P25.e",
+                  "text": "Another framework or important distinction",
+                  "catch_all": true
+                }
+              ],
+              "context": "An authoritarian government systematically violates human rights abroad. Your country has enough influence to impose meaningful diplomatic and economic costs, but doing so would damage trade and geopolitical cooperation. Military intervention is not under consideration.",
+              "prompt": "What principle should guide your country's response?",
+              "explain": "optional"
+            }
+          ]
+        },
+        {
+          "number": 6,
+          "title": "Economic institutions, state capacity, and the boundaries of freedom",
+          "questions": [
+            {
+              "id": "P26",
+              "number": 26,
+              "title": "Markets, regulation, and the burden of proof",
+              "options": [
+                {
+                  "id": "P26.a",
+                  "text": "Primarily on those proposing regulation; state intervention requires strong justification",
+                  "catch_all": false
+                },
+                {
+                  "id": "P26.b",
+                  "text": "Generally on regulators, though credible evidence of serious harm can justify precaution",
+                  "catch_all": false
+                },
+                {
+                  "id": "P26.c",
+                  "text": "Neither side deserves a presumption; assess expected benefits, harms, and uncertainty symmetrically",
+                  "catch_all": false
+                },
+                {
+                  "id": "P26.d",
+                  "text": "Primarily on defenders of the status quo when there are credible signs of significant social harm",
+                  "catch_all": false
+                },
+                {
+                  "id": "P26.e",
+                  "text": "Another framework",
+                  "catch_all": true
+                }
+              ],
+              "context": "Suppose a relatively competitive market produces considerable economic growth but also creates meaningful social problems, including unstable employment, unequal bargaining power, and some environmental damage. Proposed regulations could mitigate these problems, but their effects on investment and innovation remain uncertain.",
+              "prompt": "Where should the burden of proof lie?",
+              "explain": "optional"
+            },
+            {
+              "id": "P27",
+              "number": 27,
+              "title": "Concentrated private power",
+              "options": [
+                {
+                  "id": "P27.a",
+                  "text": "Intervene aggressively; concentrated private power can undermine liberty even without conventional market failures",
+                  "catch_all": false
+                },
+                {
+                  "id": "P27.b",
+                  "text": "Intervene selectively, including through competition policy and safeguards against arbitrary exclusion",
+                  "catch_all": false
+                },
+                {
+                  "id": "P27.c",
+                  "text": "Intervene only where demonstrable consumer harm or identifiable market failures exist",
+                  "catch_all": false
+                },
+                {
+                  "id": "P27.d",
+                  "text": "Generally defer to voluntary market arrangements and property rights",
+                  "catch_all": false
+                },
+                {
+                  "id": "P27.e",
+                  "text": "Another approach or distinction",
+                  "catch_all": true
+                }
+              ],
+              "context": "Imagine a small number of enormously powerful corporations control essential digital infrastructure, employment opportunities, and access to public communication. They have acquired their positions legally, and there is no clear evidence of traditional price-fixing. Nevertheless, individuals have few realistic alternatives and the firms can exercise substantial discretionary power over their lives.",
+              "prompt": "How should government respond?",
+              "explain": "optional"
+            },
+            {
+              "id": "P28",
+              "number": 28,
+              "title": "Free speech and harmful expression",
+              "options": [
+                {
+                  "id": "P28.a",
+                  "text": "No; political expression should remain protected even when deeply harmful or offensive",
+                  "catch_all": false
+                },
+                {
+                  "id": "P28.b",
+                  "text": "Almost never, but exceptional serious threats could justify narrow restrictions",
+                  "catch_all": false
+                },
+                {
+                  "id": "P28.c",
+                  "text": "Possibly, if sufficiently compelling evidence establishes substantial societal harm",
+                  "catch_all": false
+                },
+                {
+                  "id": "P28.d",
+                  "text": "Yes, preventing serious discrimination and social damage can justify restricting expression",
+                  "catch_all": false
+                },
+                {
+                  "id": "P28.e",
+                  "text": "Another distinction",
+                  "catch_all": true
+                }
+              ],
+              "context": "Suppose a political movement promotes deeply offensive and discriminatory ideas, but neither incites imminent violence nor directly threatens anyone. Its messages might contribute to prejudice, hostility, and deterioration of social trust. Government could legally suppress the movement if the constitution were amended.",
+              "prompt": "Would such suppression be morally legitimate?",
+              "explain": "optional"
+            },
+            {
+              "id": "P29",
+              "number": 29,
+              "title": "Capitalism and worker power",
+              "options": [
+                {
+                  "id": "P29.a",
+                  "text": "Maintain private enterprise, with targeted measures promoting competition and worker mobility",
+                  "catch_all": false
+                },
+                {
+                  "id": "P29.b",
+                  "text": "Preserve market capitalism but strengthen unions, bargaining rights, and worker protections",
+                  "catch_all": false
+                },
+                {
+                  "id": "P29.c",
+                  "text": "Encourage employee ownership and worker participation in corporate governance as a structural reform",
+                  "catch_all": false
+                },
+                {
+                  "id": "P29.d",
+                  "text": "Pursue more fundamental democratization of economic ownership and decision-making",
+                  "catch_all": false
+                },
+                {
+                  "id": "P29.e",
+                  "text": "Another approach",
+                  "catch_all": true
+                }
+              ],
+              "context": "Consider a productive market economy in which capital owners and senior executives capture a substantial share of economic gains, while workers have relatively little bargaining power. Competitive markets generally function, but worker influence over corporate decisions remains limited.",
+              "prompt": "Which approach is closest to your preference?",
+              "explain": "optional"
+            },
+            {
+              "id": "P30",
+              "number": 30,
+              "title": "Public order versus civil liberties",
+              "options": [
+                {
+                  "id": "P30.a",
+                  "text": "Strong protest rights, tolerating substantial disruption unless violence or direct threats occur",
+                  "catch_all": false
+                },
+                {
+                  "id": "P30.b",
+                  "text": "Protect protest rights while using narrow, content-neutral restrictions on severe disruption",
+                  "catch_all": false
+                },
+                {
+                  "id": "P30.c",
+                  "text": "Give public order and residents' ordinary freedom of movement comparable weight to protest rights",
+                  "catch_all": false
+                },
+                {
+                  "id": "P30.d",
+                  "text": "Prioritize public order; demonstrations should not significantly interfere with others' daily lives",
+                  "catch_all": false
+                },
+                {
+                  "id": "P30.e",
+                  "text": "Another approach",
+                  "catch_all": true
+                }
+              ],
+              "context": "A major city experiences repeated disruptive protests. The demonstrators are largely peaceful, but their actions obstruct transportation, disrupt commerce, and impose substantial inconvenience on residents. Officials have legal authority to introduce stricter protest restrictions that would reduce disruption but also make effective demonstration more difficult.",
+              "prompt": "What should government prioritize?",
+              "explain": "optional"
+            }
+          ]
+        },
+        {
+          "number": 7,
+          "title": "Rights, institutions, and concrete policy choices",
+          "questions": [
+            {
+              "id": "P31",
+              "number": 31,
+              "title": "Healthcare and the welfare state",
+              "options": [
+                {
+                  "id": "P31.a",
+                  "text": "Universal public insurance, because comprehensive access and risk pooling justify the institutional change",
+                  "catch_all": false
+                },
+                {
+                  "id": "P31.b",
+                  "text": "Universal public insurance if evidence shows it performs better, but without an intrinsic preference for public provision",
+                  "catch_all": false
+                },
+                {
+                  "id": "P31.c",
+                  "text": "Competitive private insurance with substantial subsidies and regulatory safeguards",
+                  "catch_all": false
+                },
+                {
+                  "id": "P31.d",
+                  "text": "Mostly market-based insurance, with government targeting those who otherwise cannot afford care",
+                  "catch_all": false
+                },
+                {
+                  "id": "P31.e",
+                  "text": "I would favor a different arrangement or need different evidence",
+                  "catch_all": true
+                }
+              ],
+              "context": "A country has expensive healthcare, substantial disparities in access, and uneven outcomes. Policymakers can either establish a universal public insurance system while preserving private providers, or pursue a competitive private-insurance system with subsidies, regulation, and protections for lower-income citizens. Both require substantial public funding; their precise performance depends on implementation.",
+              "prompt": "Which arrangement are you more inclined to support?",
+              "explain": "optional"
+            },
+            {
+              "id": "P32",
+              "number": 32,
+              "title": "Housing, local democracy, and property rights",
+              "options": [
+                {
+                  "id": "P32.a",
+                  "text": "Override restrictive local zoning and allow substantial construction, even against homeowners' preferences",
+                  "catch_all": false
+                },
+                {
+                  "id": "P32.b",
+                  "text": "Substantially liberalize construction while retaining limited local safeguards",
+                  "catch_all": false
+                },
+                {
+                  "id": "P32.c",
+                  "text": "Pursue gradual negotiated reforms, giving meaningful weight to local democratic preferences",
+                  "catch_all": false
+                },
+                {
+                  "id": "P32.d",
+                  "text": "Preserve strong local control over development decisions",
+                  "catch_all": false
+                },
+                {
+                  "id": "P32.e",
+                  "text": "Another approach",
+                  "catch_all": true
+                }
+              ],
+              "context": "A prosperous city faces severe housing shortages and high rents. Local homeowners strongly oppose denser development, citing neighborhood character and changes to their communities. Economists and planners broadly agree that allowing substantially more construction would increase supply and improve affordability over time.",
+              "prompt": "How should government respond?",
+              "explain": "optional"
+            },
+            {
+              "id": "P33",
+              "number": 33,
+              "title": "Climate change and economic growth",
+              "options": [
+                {
+                  "id": "P33.a",
+                  "text": "Aggressive intervention, including substantial public investment and regulation, even at meaningful growth costs",
+                  "catch_all": false
+                },
+                {
+                  "id": "P33.b",
+                  "text": "A strong carbon-pricing framework combined with targeted public investment and carefully justified regulation",
+                  "catch_all": false
+                },
+                {
+                  "id": "P33.c",
+                  "text": "Primarily market-based measures such as carbon pricing, minimizing direct state intervention",
+                  "catch_all": false
+                },
+                {
+                  "id": "P33.d",
+                  "text": "Prioritize affordable energy and growth, relying predominantly on innovation rather than restrictive climate policy",
+                  "catch_all": false
+                },
+                {
+                  "id": "P33.e",
+                  "text": "Another framework or a distinction between policies",
+                  "catch_all": true
+                }
+              ],
+              "context": "Reducing greenhouse-gas emissions requires policy intervention because many environmental costs are not reflected in market prices. A carbon tax with revenues returned to households could reduce emissions through market incentives. More extensive industrial regulations and subsidies could accelerate certain transitions but may be more administratively complex.",
+              "prompt": "What policy approach would you favor?",
+              "explain": "optional"
+            },
+            {
+              "id": "P34",
+              "number": 34,
+              "title": "Crime, punishment, and the rule of law",
+              "options": [
+                {
+                  "id": "P34.a",
+                  "text": "Emphasize rehabilitation, prevention, and reducing incarceration while strictly protecting defendants' rights",
+                  "catch_all": false
+                },
+                {
+                  "id": "P34.b",
+                  "text": "Combine credible enforcement and accountability with substantial rehabilitation and prevention",
+                  "catch_all": false
+                },
+                {
+                  "id": "P34.c",
+                  "text": "Prioritize deterrence and effective policing, with safeguards against abuse",
+                  "catch_all": false
+                },
+                {
+                  "id": "P34.d",
+                  "text": "Prioritize punishment and public order, accepting some additional restrictions to reduce crime",
+                  "catch_all": false
+                },
+                {
+                  "id": "P34.e",
+                  "text": "Another approach",
+                  "catch_all": true
+                }
+              ],
+              "context": "A society has serious violent crime, overcrowded prisons, and substantial disparities in criminal-justice outcomes. Evidence suggests some policing practices deter violence, while other enforcement methods generate substantial social costs and risks of abuse. Rehabilitation and prevention programs also offer potential benefits, with varying levels of effectiveness.",
+              "prompt": "What should be the principal orientation of criminal-justice policy?",
+              "explain": "prompted"
+            },
+            {
+              "id": "P35",
+              "number": 35,
+              "title": "International security and military intervention",
+              "options": [
+                {
+                  "id": "P35.a",
+                  "text": "Provide substantial support: defending national self-determination and resisting aggression justifies significant costs",
+                  "catch_all": false
+                },
+                {
+                  "id": "P35.b",
+                  "text": "Support the threatened democracy if the strategic outlook and expected consequences justify the risks",
+                  "catch_all": false
+                },
+                {
+                  "id": "P35.c",
+                  "text": "Provide limited assistance and prioritize diplomacy to minimize escalation",
+                  "catch_all": false
+                },
+                {
+                  "id": "P35.d",
+                  "text": "Avoid involvement unless direct national security interests are seriously threatened",
+                  "catch_all": false
+                },
+                {
+                  "id": "P35.e",
+                  "text": "Another framework or distinction",
+                  "catch_all": true
+                }
+              ],
+              "context": "A democratic country is threatened by an authoritarian neighbor. Your country could provide weapons, intelligence, and economic assistance. Supporting the democracy would strengthen its ability to resist aggression, but would impose substantial financial costs and create some risk of escalation. There is no treaty obligation to intervene.",
+              "prompt": "What principle should guide the decision?",
+              "explain": "optional"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "U",
+      "title": "US policy",
+      "rounds": [
+        {
+          "number": 1,
+          "title": "Economics and the role of government",
+          "questions": [
+            {
+              "id": "U1",
+              "number": 1,
+              "title": "Federal taxation",
+              "options": [
+                {
+                  "id": "U1.a",
+                  "text": "Substantially increase taxes on high earners, capital income, and large estates to finance more public services",
+                  "catch_all": false
+                },
+                {
+                  "id": "U1.b",
+                  "text": "Moderately increase taxes on high earners and capital income, while preserving incentives for investment",
+                  "catch_all": false
+                },
+                {
+                  "id": "U1.c",
+                  "text": "Keep the overall tax burden broadly similar, but simplify the code and close loopholes",
+                  "catch_all": false
+                },
+                {
+                  "id": "U1.d",
+                  "text": "Reduce taxes on income, investment, and businesses to encourage economic growth",
+                  "catch_all": false
+                },
+                {
+                  "id": "U1.e",
+                  "text": "Pursue a more fundamental overhaul, such as a greater reliance on consumption or land-value taxes",
+                  "catch_all": false
+                },
+                {
+                  "id": "U1.x",
+                  "text": "I reject the framing of this question",
+                  "catch_all": true,
+                  "added": true
+                }
+              ],
+              "context": "",
+              "prompt": "Which general direction would you take federal tax policy over the next decade?",
+              "explain": "optional"
+            },
+            {
+              "id": "U2",
+              "number": 2,
+              "title": "Federal spending and deficits",
+              "options": [
+                {
+                  "id": "U2.a",
+                  "text": "Expand public investment and services, even if deficits remain elevated",
+                  "catch_all": false
+                },
+                {
+                  "id": "U2.b",
+                  "text": "Maintain core services while combining targeted tax increases and spending restraint to stabilize debt",
+                  "catch_all": false
+                },
+                {
+                  "id": "U2.c",
+                  "text": "Make deficit reduction a central priority through meaningful spending reforms and some revenue measures",
+                  "catch_all": false
+                },
+                {
+                  "id": "U2.d",
+                  "text": "Substantially reduce the size and scope of federal spending",
+                  "catch_all": false
+                },
+                {
+                  "id": "U2.e",
+                  "text": "Prioritize growth-enhancing structural reforms over near-term deficit targets",
+                  "catch_all": false
+                },
+                {
+                  "id": "U2.x",
+                  "text": "I reject the framing of this question",
+                  "catch_all": true,
+                  "added": true
+                }
+              ],
+              "context": "",
+              "prompt": "The United States faces persistent fiscal deficits, rising debt-service costs, and pressure to finance healthcare, retirement benefits, defense, and other priorities. What would you prioritize?",
+              "explain": "optional"
+            },
+            {
+              "id": "U3",
+              "number": 3,
+              "title": "Minimum wage and labor markets",
+              "options": [
+                {
+                  "id": "U3.a",
+                  "text": "A substantially higher national minimum wage, indexed to inflation",
+                  "catch_all": false
+                },
+                {
+                  "id": "U3.b",
+                  "text": "A moderately higher federal floor, with regional or state adjustments",
+                  "catch_all": false
+                },
+                {
+                  "id": "U3.c",
+                  "text": "Keep the federal floor relatively modest and leave most increases to states and cities",
+                  "catch_all": false
+                },
+                {
+                  "id": "U3.d",
+                  "text": "Abolish or substantially reduce minimum-wage requirements and rely on labor-market competition",
+                  "catch_all": false
+                },
+                {
+                  "id": "U3.e",
+                  "text": "Use an alternative such as wage subsidies or expanded earned-income tax credits as the main instrument",
+                  "catch_all": false
+                },
+                {
+                  "id": "U3.x",
+                  "text": "I reject the framing of this question",
+                  "catch_all": true,
+                  "added": true
+                }
+              ],
+              "context": "",
+              "prompt": "What minimum-wage policy would you support?",
+              "explain": "optional"
+            },
+            {
+              "id": "U4",
+              "number": 4,
+              "title": "Business regulation and competition",
+              "options": [
+                {
+                  "id": "U4.a",
+                  "text": "Aggressively expand antitrust enforcement and regulation of large firms",
+                  "catch_all": false
+                },
+                {
+                  "id": "U4.b",
+                  "text": "Strengthen antitrust enforcement while simplifying unnecessarily burdensome regulations",
+                  "catch_all": false
+                },
+                {
+                  "id": "U4.c",
+                  "text": "Broadly maintain current regulatory authority but focus on more consistent and effective enforcement",
+                  "catch_all": false
+                },
+                {
+                  "id": "U4.d",
+                  "text": "Substantially deregulate and rely more on market competition to discipline firms",
+                  "catch_all": false
+                },
+                {
+                  "id": "U4.e",
+                  "text": "Pursue major deregulation in most sectors, paired with selective intervention against genuine monopolies",
+                  "catch_all": false
+                },
+                {
+                  "id": "U4.x",
+                  "text": "I reject the framing of this question",
+                  "catch_all": true,
+                  "added": true
+                }
+              ],
+              "context": "",
+              "prompt": "How would you change US economic regulation, including antitrust enforcement?",
+              "explain": "optional"
+            },
+            {
+              "id": "U5",
+              "number": 5,
+              "title": "Healthcare system",
+              "options": [
+                {
+                  "id": "U5.a",
+                  "text": "Single-payer national insurance replacing most private primary insurance",
+                  "catch_all": false
+                },
+                {
+                  "id": "U5.b",
+                  "text": "A universal public option with automatic or near-universal coverage while retaining private insurers",
+                  "catch_all": false
+                },
+                {
+                  "id": "U5.c",
+                  "text": "A highly regulated multipayer universal system, potentially including mandatory coverage",
+                  "catch_all": false
+                },
+                {
+                  "id": "U5.d",
+                  "text": "Build on the Affordable Care Act with larger subsidies and incremental reforms",
+                  "catch_all": false
+                },
+                {
+                  "id": "U5.e",
+                  "text": "A market-led system with targeted public support for vulnerable populations",
+                  "catch_all": false
+                },
+                {
+                  "id": "U5.x",
+                  "text": "I reject the framing of this question",
+                  "catch_all": true,
+                  "added": true
+                }
+              ],
+              "context": "",
+              "prompt": "Which healthcare arrangement would you favor for the United States?",
+              "explain": "prompted"
+            }
+          ]
+        },
+        {
+          "number": 2,
+          "title": "Immigration, crime, and social policy",
+          "questions": [
+            {
+              "id": "U6",
+              "number": 6,
+              "title": "Legal immigration levels",
+              "options": [
+                {
+                  "id": "U6.a",
+                  "text": "Increase substantially, with major expansion of work-based and other legal pathways",
+                  "catch_all": false
+                },
+                {
+                  "id": "U6.b",
+                  "text": "Increase moderately, particularly through employment-based immigration",
+                  "catch_all": false
+                },
+                {
+                  "id": "U6.c",
+                  "text": "Keep overall admissions roughly stable, while changing the mix of categories",
+                  "catch_all": false
+                },
+                {
+                  "id": "U6.d",
+                  "text": "Reduce overall legal immigration, prioritizing applicants with high economic contributions",
+                  "catch_all": false
+                },
+                {
+                  "id": "U6.e",
+                  "text": "Reduce legal immigration substantially across most categories",
+                  "catch_all": false
+                },
+                {
+                  "id": "U6.x",
+                  "text": "I reject the framing of this question",
+                  "catch_all": true,
+                  "added": true
+                }
+              ],
+              "context": "",
+              "prompt": "What would you do with the number of people admitted legally to the United States for permanent residence, including family-, employment-, and humanitarian-based categories?",
+              "explain": "optional"
+            },
+            {
+              "id": "U7",
+              "number": 7,
+              "title": "Unauthorized immigration and enforcement",
+              "options": [
+                {
+                  "id": "U7.a",
+                  "text": "Broad legalization for established residents, with relatively limited interior enforcement",
+                  "catch_all": false
+                },
+                {
+                  "id": "U7.b",
+                  "text": "A conditional path to legal status for established residents, alongside strong border enforcement and immigration-system reform",
+                  "catch_all": false
+                },
+                {
+                  "id": "U7.c",
+                  "text": "Enforce borders rigorously and increase removals, with legalization confined to narrowly defined groups",
+                  "catch_all": false
+                },
+                {
+                  "id": "U7.d",
+                  "text": "Expand deportations substantially, including established unauthorized residents without serious criminal convictions",
+                  "catch_all": false
+                },
+                {
+                  "id": "U7.e",
+                  "text": "Pursue a different combination of legalization, enforcement, and administrative reform",
+                  "catch_all": true
+                }
+              ],
+              "context": "",
+              "prompt": "What should US policy prioritize for people currently living in the country without legal immigration status?",
+              "explain": "optional"
+            },
+            {
+              "id": "U8",
+              "number": 8,
+              "title": "Policing and public disorder",
+              "options": [
+                {
+                  "id": "U8.a",
+                  "text": "Focus primarily on prevention, social services, and alternatives to arrest for low-level offenses",
+                  "catch_all": false
+                },
+                {
+                  "id": "U8.b",
+                  "text": "Enforce serious offenses aggressively, but divert most nonviolent disorder cases toward services",
+                  "catch_all": false
+                },
+                {
+                  "id": "U8.c",
+                  "text": "Consistently enforce both minor and serious offenses, with proportionate sanctions, accountable policing, and diversion where effective",
+                  "catch_all": false
+                },
+                {
+                  "id": "U8.d",
+                  "text": "Substantially increase police presence, arrests, prosecution, and penalties to restore order",
+                  "catch_all": false
+                },
+                {
+                  "id": "U8.e",
+                  "text": "Favor a different strategy",
+                  "catch_all": true
+                }
+              ],
+              "context": "",
+              "prompt": "Suppose a major American city experiences persistent shoplifting, public drug use, transit disorder, and other low-level offenses, alongside more serious violent crime. What would you do?",
+              "explain": "optional"
+            },
+            {
+              "id": "U9",
+              "number": 9,
+              "title": "Criminal sentencing and incarceration",
+              "options": [
+                {
+                  "id": "U9.a",
+                  "text": "Substantially reduce incarceration through shorter sentences and expanded alternatives to prison",
+                  "catch_all": false
+                },
+                {
+                  "id": "U9.b",
+                  "text": "Reduce incarceration for nonviolent offenses while maintaining strong penalties for serious violent crime",
+                  "catch_all": false
+                },
+                {
+                  "id": "U9.c",
+                  "text": "Maintain broadly similar sentencing severity but improve certainty of punishment, prison management, and rehabilitation",
+                  "catch_all": false
+                },
+                {
+                  "id": "U9.d",
+                  "text": "Increase penalties and use incarceration more extensively, especially for repeat offenders",
+                  "catch_all": false
+                },
+                {
+                  "id": "U9.e",
+                  "text": "Pursue a different approach or distinguish among offense categories",
+                  "catch_all": true
+                }
+              ],
+              "context": "",
+              "prompt": "Which broad change would you support to American sentencing policy?",
+              "explain": "optional"
+            },
+            {
+              "id": "U10",
+              "number": 10,
+              "title": "Drugs and addiction",
+              "options": [
+                {
+                  "id": "U10.a",
+                  "text": "Legalize and regulate most drugs, including hard drugs, with strong treatment and harm-reduction services",
+                  "catch_all": false
+                },
+                {
+                  "id": "U10.b",
+                  "text": "Decriminalize personal possession of most drugs, while maintaining prohibitions on commercial supply",
+                  "catch_all": false
+                },
+                {
+                  "id": "U10.c",
+                  "text": "Legalize cannabis, expand treatment and harm reduction, but retain criminal penalties for possession of the most dangerous drugs",
+                  "catch_all": false
+                },
+                {
+                  "id": "U10.d",
+                  "text": "Retain broad prohibitions and strengthen enforcement against possession and distribution of dangerous drugs",
+                  "catch_all": false
+                },
+                {
+                  "id": "U10.e",
+                  "text": "Use a more differentiated system, such as mandatory treatment or special rules for particular substances",
+                  "catch_all": false
+                },
+                {
+                  "id": "U10.x",
+                  "text": "I reject the framing of this question",
+                  "catch_all": true,
+                  "added": true
+                }
+              ],
+              "context": "",
+              "prompt": "Which approach would you support toward adult recreational drug use, including substances with high addiction and overdose risks?",
+              "explain": "prompted"
+            }
+          ]
+        },
+        {
+          "number": 3,
+          "title": "Energy, climate, education, and economic development",
+          "questions": [
+            {
+              "id": "U11",
+              "number": 11,
+              "title": "Energy and electricity production",
+              "options": [
+                {
+                  "id": "U11.a",
+                  "text": "Rapidly prioritize clean energy, including regulation and subsidies that accelerate replacing fossil fuels",
+                  "catch_all": false
+                },
+                {
+                  "id": "U11.b",
+                  "text": "Expand nuclear, renewables, transmission, and storage while gradually reducing fossil-fuel dependence",
+                  "catch_all": false
+                },
+                {
+                  "id": "U11.c",
+                  "text": "Pursue energy abundance across nuclear, renewables, and fossil fuels, with broad permitting reform",
+                  "catch_all": false
+                },
+                {
+                  "id": "U11.d",
+                  "text": "Prioritize cheap domestic fossil fuels and energy independence, while allowing other sources to compete",
+                  "catch_all": false
+                },
+                {
+                  "id": "U11.e",
+                  "text": "Use another mix of technologies or policy instruments",
+                  "catch_all": true
+                }
+              ],
+              "context": "",
+              "prompt": "US energy policy must balance electricity affordability, reliability, emissions, and rapidly growing demand. Which approach would you implement?",
+              "explain": "optional"
+            },
+            {
+              "id": "U12",
+              "number": 12,
+              "title": "Environmental review and infrastructure permitting",
+              "options": [
+                {
+                  "id": "U12.a",
+                  "text": "Substantially streamline permitting and limit procedural opportunities to block projects",
+                  "catch_all": false
+                },
+                {
+                  "id": "U12.b",
+                  "text": "Moderately streamline permitting while preserving strong environmental review and legal challenges",
+                  "catch_all": false
+                },
+                {
+                  "id": "U12.c",
+                  "text": "Maintain existing safeguards but improve agency staffing and processing speed",
+                  "catch_all": false
+                },
+                {
+                  "id": "U12.d",
+                  "text": "Strengthen environmental and community review, even if major projects take longer",
+                  "catch_all": false
+                },
+                {
+                  "id": "U12.e",
+                  "text": "Use different standards for different types of projects",
+                  "catch_all": false
+                },
+                {
+                  "id": "U12.x",
+                  "text": "I reject the framing of this question",
+                  "catch_all": true,
+                  "added": true
+                }
+              ],
+              "context": "",
+              "prompt": "Major housing, transit, energy, and transmission projects can face lengthy approval processes. Environmental reviews protect legitimate interests but may also delay construction and increase costs.",
+              "explain": "optional"
+            },
+            {
+              "id": "U13",
+              "number": 13,
+              "title": "K–12 education and school choice",
+              "options": [
+                {
+                  "id": "U13.a",
+                  "text": "Expand charter schools and vouchers substantially, with common accountability standards",
+                  "catch_all": false
+                },
+                {
+                  "id": "U13.b",
+                  "text": "Expand high-performing charters and limited choice programs while reforming traditional public schools",
+                  "catch_all": false
+                },
+                {
+                  "id": "U13.c",
+                  "text": "Prioritize improving traditional public schools, with charters serving a limited supplementary role",
+                  "catch_all": false
+                },
+                {
+                  "id": "U13.d",
+                  "text": "Restrict private vouchers and charter expansion, concentrating resources in district public schools",
+                  "catch_all": false
+                },
+                {
+                  "id": "U13.e",
+                  "text": "Use another approach, particularly for funding or school governance",
+                  "catch_all": true
+                }
+              ],
+              "context": "",
+              "prompt": "Consider public-school funding, charter schools, private-school vouchers, teacher accountability, and family choice. What would be your main policy direction?",
+              "explain": "optional"
+            },
+            {
+              "id": "U14",
+              "number": 14,
+              "title": "College affordability and student loans",
+              "options": [
+                {
+                  "id": "U14.a",
+                  "text": "Make public higher education tuition-free and cancel substantial existing student debt",
+                  "catch_all": false
+                },
+                {
+                  "id": "U14.b",
+                  "text": "Substantially increase need-based aid and income-driven repayment, with selective debt relief",
+                  "catch_all": false
+                },
+                {
+                  "id": "U14.c",
+                  "text": "Expand targeted grants while limiting excessive borrowing and holding institutions accountable for cost and outcomes",
+                  "catch_all": false
+                },
+                {
+                  "id": "U14.d",
+                  "text": "Reduce federal lending and subsidies significantly, relying more on institutional competition and private financing",
+                  "catch_all": false
+                },
+                {
+                  "id": "U14.e",
+                  "text": "Pursue another model, such as graduate-tax financing or major vocational alternatives",
+                  "catch_all": false
+                },
+                {
+                  "id": "U14.x",
+                  "text": "I reject the framing of this question",
+                  "catch_all": true,
+                  "added": true
+                }
+              ],
+              "context": "",
+              "prompt": "US policymakers must decide how to distribute higher-education costs among taxpayers, students, and institutions.",
+              "explain": "optional"
+            },
+            {
+              "id": "U15",
+              "number": 15,
+              "title": "Industrial policy and domestic manufacturing",
+              "options": [
+                {
+                  "id": "U15.a",
+                  "text": "Pursue broad industrial policy to rebuild domestic manufacturing, even at substantial fiscal cost",
+                  "catch_all": false
+                },
+                {
+                  "id": "U15.b",
+                  "text": "Use targeted subsidies and public investment for genuinely strategic sectors, with performance requirements",
+                  "catch_all": false
+                },
+                {
+                  "id": "U15.c",
+                  "text": "Focus on research, infrastructure, skilled immigration, and competitiveness rather than firm-specific subsidies",
+                  "catch_all": false
+                },
+                {
+                  "id": "U15.d",
+                  "text": "Avoid most industrial subsidies and trade protections; rely primarily on global markets",
+                  "catch_all": false
+                },
+                {
+                  "id": "U15.e",
+                  "text": "Differentiate sharply among national security, research, and ordinary commercial industries",
+                  "catch_all": false
+                },
+                {
+                  "id": "U15.x",
+                  "text": "I reject the framing of this question",
+                  "catch_all": true,
+                  "added": true
+                }
+              ],
+              "context": "",
+              "prompt": "Should the US government use subsidies, tax credits, tariffs, or public procurement to expand domestic manufacturing in strategically important industries such as semiconductors, batteries, and advanced technology?",
+              "explain": "optional"
+            }
+          ]
+        },
+        {
+          "number": 4,
+          "title": "Social policy and political institutions",
+          "questions": [
+            {
+              "id": "U16",
+              "number": 16,
+              "title": "Abortion policy",
+              "options": [
+                {
+                  "id": "U16.a",
+                  "text": "Protect abortion access nationally throughout pregnancy, subject to medical regulation",
+                  "catch_all": false
+                },
+                {
+                  "id": "U16.b",
+                  "text": "Protect abortion access nationally through viability, with later exceptions for serious medical circumstances",
+                  "catch_all": false
+                },
+                {
+                  "id": "U16.c",
+                  "text": "Protect abortion access nationally through approximately the first trimester, with later exceptions",
+                  "catch_all": false
+                },
+                {
+                  "id": "U16.d",
+                  "text": "Leave abortion regulation primarily to individual states",
+                  "catch_all": false
+                },
+                {
+                  "id": "U16.e",
+                  "text": "Support substantial national restrictions, with limited exceptions",
+                  "catch_all": false
+                },
+                {
+                  "id": "U16.x",
+                  "text": "I reject the framing of this question",
+                  "catch_all": true,
+                  "added": true
+                }
+              ],
+              "context": "",
+              "prompt": "What federal policy would you favor regarding abortion access?",
+              "explain": "optional"
+            },
+            {
+              "id": "U17",
+              "number": 17,
+              "title": "Transgender rights and public policy",
+              "options": [
+                {
+                  "id": "U17.a",
+                  "text": "Strong federal protections for gender identity, with generally broad access and inclusion",
+                  "catch_all": false
+                },
+                {
+                  "id": "U17.b",
+                  "text": "Protect adults against discrimination, while applying evidence-based, context-specific rules for minors and sex-separated settings",
+                  "catch_all": false
+                },
+                {
+                  "id": "U17.c",
+                  "text": "Protect adult private choices, but adopt relatively restrictive policies for minors, schools, and sex-separated settings",
+                  "catch_all": false
+                },
+                {
+                  "id": "U17.d",
+                  "text": "Roll back many gender-identity-based protections and prioritize biological-sex classifications",
+                  "catch_all": false
+                },
+                {
+                  "id": "U17.e",
+                  "text": "A different combination of policies; specify distinctions in your explanation",
+                  "catch_all": true
+                }
+              ],
+              "context": "",
+              "prompt": "Which policy approach would you favor regarding gender identity, particularly legal recognition, school policies, sports participation, and medical treatment for minors?",
+              "explain": "optional"
+            },
+            {
+              "id": "U18",
+              "number": 18,
+              "title": "Voting and election administration",
+              "options": [
+                {
+                  "id": "U18.a",
+                  "text": "Expand automatic registration, mail voting, and early voting while minimizing identification requirements",
+                  "catch_all": false
+                },
+                {
+                  "id": "U18.b",
+                  "text": "Make voting broadly accessible, with standardized identification and safeguards against administrative error",
+                  "catch_all": false
+                },
+                {
+                  "id": "U18.c",
+                  "text": "Prioritize stricter voter identification, voter-roll maintenance, and limits on mail voting",
+                  "catch_all": false
+                },
+                {
+                  "id": "U18.d",
+                  "text": "Leave most election rules to states, with relatively limited federal involvement",
+                  "catch_all": false
+                },
+                {
+                  "id": "U18.e",
+                  "text": "Pursue broader electoral changes such as ranked-choice voting or independent election administration",
+                  "catch_all": false
+                },
+                {
+                  "id": "U18.x",
+                  "text": "I reject the framing of this question",
+                  "catch_all": true,
+                  "added": true
+                }
+              ],
+              "context": "",
+              "prompt": "Which general election-administration reforms would you support?",
+              "explain": "optional"
+            },
+            {
+              "id": "U19",
+              "number": 19,
+              "title": "Federal bureaucracy and civil-service reform",
+              "options": [
+                {
+                  "id": "U19.a",
+                  "text": "Preserve strong civil-service protections and expand agency capacity and expertise",
+                  "catch_all": false
+                },
+                {
+                  "id": "U19.b",
+                  "text": "Strengthen performance evaluation and management while preserving meaningful protections against politicization",
+                  "catch_all": false
+                },
+                {
+                  "id": "U19.c",
+                  "text": "Make it substantially easier to dismiss underperforming federal employees, restructure agencies, and tie advancement to measurable results",
+                  "catch_all": false
+                },
+                {
+                  "id": "U19.d",
+                  "text": "Significantly reduce the federal workforce and transfer more functions to private providers or states",
+                  "catch_all": false
+                },
+                {
+                  "id": "U19.e",
+                  "text": "Pursue more sweeping structural changes to agency governance and accountability",
+                  "catch_all": false
+                },
+                {
+                  "id": "U19.x",
+                  "text": "I reject the framing of this question",
+                  "catch_all": true,
+                  "added": true
+                }
+              ],
+              "context": "",
+              "prompt": "How should the federal government change the way agencies recruit, evaluate, retain, and dismiss employees?",
+              "explain": "optional"
+            },
+            {
+              "id": "U20",
+              "number": 20,
+              "title": "Social Security and Medicare fiscal reform",
+              "options": [
+                {
+                  "id": "U20.a",
+                  "text": "Increase taxes on high earners and capital income to preserve or expand existing benefits",
+                  "catch_all": false
+                },
+                {
+                  "id": "U20.b",
+                  "text": "Combine additional revenue with gradual adjustments to benefits, eligibility, or payment systems",
+                  "catch_all": false
+                },
+                {
+                  "id": "U20.c",
+                  "text": "Prioritize slowing benefit growth, means-testing, and adjusting retirement eligibility while protecting poorer recipients",
+                  "catch_all": false
+                },
+                {
+                  "id": "U20.d",
+                  "text": "Substantially restructure entitlement programs to reduce federal obligations and increase individual responsibility",
+                  "catch_all": false
+                },
+                {
+                  "id": "U20.e",
+                  "text": "I would distinguish sharply between Social Security and Medicare or pursue another approach",
+                  "catch_all": true
+                }
+              ],
+              "context": "",
+              "prompt": "Assume long-run financing pressures require changes to major federal retirement and healthcare programs. Which direction would you prioritize?",
+              "explain": "optional"
+            }
+          ]
+        },
+        {
+          "number": 5,
+          "title": "Foreign policy and national security",
+          "questions": [
+            {
+              "id": "U21",
+              "number": 21,
+              "title": "Defense spending and military strategy",
+              "options": [
+                {
+                  "id": "U21.a",
+                  "text": "Substantially increase defense spending and military capabilities to maintain global superiority",
+                  "catch_all": false
+                },
+                {
+                  "id": "U21.b",
+                  "text": "Maintain a large, globally capable military, with selective modernization and efficiency reforms",
+                  "catch_all": false
+                },
+                {
+                  "id": "U21.c",
+                  "text": "Restructure the military around a narrower set of strategic threats while reducing less essential global commitments",
+                  "catch_all": false
+                },
+                {
+                  "id": "U21.d",
+                  "text": "Substantially reduce defense spending and the US military presence overseas",
+                  "catch_all": false
+                },
+                {
+                  "id": "U21.e",
+                  "text": "Take another approach, particularly regarding procurement, readiness, or force structure",
+                  "catch_all": true
+                }
+              ],
+              "context": "",
+              "prompt": "How would you change US defense spending and force structure over the coming decade?",
+              "explain": "optional"
+            },
+            {
+              "id": "U22",
+              "number": 22,
+              "title": "NATO and American alliances",
+              "options": [
+                {
+                  "id": "U22.a",
+                  "text": "Strengthen US commitments and maintain a leading military role in defending allies",
+                  "catch_all": false
+                },
+                {
+                  "id": "U22.b",
+                  "text": "Maintain strong alliances while requiring substantially greater allied defense contributions",
+                  "catch_all": false
+                },
+                {
+                  "id": "U22.c",
+                  "text": "Reduce US commitments over time and shift primary responsibility for regional security to allies",
+                  "catch_all": false
+                },
+                {
+                  "id": "U22.d",
+                  "text": "Withdraw from or fundamentally restructure major security alliances",
+                  "catch_all": false
+                },
+                {
+                  "id": "U22.e",
+                  "text": "Differentiate among alliances and regions",
+                  "catch_all": false
+                },
+                {
+                  "id": "U22.x",
+                  "text": "I reject the framing of this question",
+                  "catch_all": true,
+                  "added": true
+                }
+              ],
+              "context": "",
+              "prompt": "How should the United States approach NATO and other long-standing security alliances?",
+              "explain": "optional"
+            },
+            {
+              "id": "U23",
+              "number": 23,
+              "title": "China, trade, and economic security",
+              "options": [
+                {
+                  "id": "U23.a",
+                  "text": "Pursue extensive economic decoupling, tariffs, and restrictions to reduce dependence",
+                  "catch_all": false
+                },
+                {
+                  "id": "U23.b",
+                  "text": "Adopt strong restrictions in strategic technologies while preserving significant ordinary trade",
+                  "catch_all": false
+                },
+                {
+                  "id": "U23.c",
+                  "text": "Use narrowly targeted national-security controls while generally favoring expanded trade and economic engagement",
+                  "catch_all": false
+                },
+                {
+                  "id": "U23.d",
+                  "text": "Remove most tariffs and restrictions and prioritize commercial integration",
+                  "catch_all": false
+                },
+                {
+                  "id": "U23.e",
+                  "text": "Use a different strategy, particularly regarding Taiwan, technology, or industrial dependence",
+                  "catch_all": true
+                }
+              ],
+              "context": "",
+              "prompt": "How should the US manage economic relations with China?",
+              "explain": "optional"
+            },
+            {
+              "id": "U24",
+              "number": 24,
+              "title": "Military aid and foreign conflicts",
+              "options": [
+                {
+                  "id": "U24.a",
+                  "text": "Provide substantial military and financial assistance when democratic sovereignty is threatened, even at high cost",
+                  "catch_all": false
+                },
+                {
+                  "id": "U24.b",
+                  "text": "Provide meaningful assistance where it supports identifiable strategic interests and has a credible prospect of success",
+                  "catch_all": false
+                },
+                {
+                  "id": "U24.c",
+                  "text": "Limit assistance to intelligence, diplomacy, targeted arms transfers, and other relatively low-cost measures",
+                  "catch_all": false
+                },
+                {
+                  "id": "U24.d",
+                  "text": "Avoid substantial involvement unless the conflict directly threatens US security",
+                  "catch_all": false
+                },
+                {
+                  "id": "U24.e",
+                  "text": "Use a different approach based on the circumstances of individual conflicts",
+                  "catch_all": true
+                }
+              ],
+              "context": "",
+              "prompt": "Consider countries resisting military aggression but lacking a formal American defense guarantee. What should US assistance policy generally be?",
+              "explain": "optional"
+            },
+            {
+              "id": "U25",
+              "number": 25,
+              "title": "National security and domestic surveillance",
+              "options": [
+                {
+                  "id": "U25.a",
+                  "text": "Expand surveillance authorities substantially, subject to oversight",
+                  "catch_all": false
+                },
+                {
+                  "id": "U25.b",
+                  "text": "Permit narrowly targeted expansions where agencies can demonstrate specific operational needs",
+                  "catch_all": false
+                },
+                {
+                  "id": "U25.c",
+                  "text": "Maintain current authorities while strengthening transparency, judicial review, and minimization requirements",
+                  "catch_all": false
+                },
+                {
+                  "id": "U25.d",
+                  "text": "Substantially restrict existing surveillance authorities and require individualized warrants for more activities",
+                  "catch_all": false
+                },
+                {
+                  "id": "U25.e",
+                  "text": "Use another framework, distinguishing metadata, content, foreign intelligence, and domestic investigations",
+                  "catch_all": true
+                }
+              ],
+              "context": "",
+              "prompt": "Suppose intelligence agencies argue that expanded surveillance authorities would improve their capacity to detect terrorism, foreign espionage, and other national-security threats. The proposed measures involve broader collection of Americans' communications data, with judicial oversight and periodic review.",
+              "explain": "optional"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

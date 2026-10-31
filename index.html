@@ -1,0 +1,477 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>html,body{margin:0;padding:0}</style></head><body><title>Politype</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one ballot sheet per screen with a progress rail on top. On wide screens the
+   sheet splits in two: the question on the left, the answer controls on the right. */
+:root {
+  --paper: #EEF1F4;
+  --sheet: #FBFCFD;
+  --ink: #15233F;
+  --muted: #5A6578;
+  --rule: #CDD4DD;
+  --mark: #0E6E5C;
+  --mark-soft: #E2F1EC;
+  --warn: #A1450E;
+  --font-q: "Newsreader", Georgia, "Times New Roman", serif;
+  --font-ui: "Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-code: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0E1318; --sheet: #151C23; --ink: #E4E9EF; --muted: #98A3B3;
+    --rule: #2B3540; --mark: #4FC1A4; --mark-soft: #16302A; --warn: #F0965A;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0E1318; --sheet: #151C23; --ink: #E4E9EF; --muted: #98A3B3;
+  --rule: #2B3540; --mark: #4FC1A4; --mark-soft: #16302A; --warn: #F0965A;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body {
+  background: var(--paper); color: var(--ink);
+  font-family: var(--font-ui); font-size: 16px; line-height: 1.55;
+}
+.wrap {
+  max-width: 1160px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px 64px;
+  display: flex; flex-direction: column; gap: 20px;
+}
+header.top { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.brand { font-family: var(--font-q); font-size: 26px; font-weight: 600; letter-spacing: -0.01em; }
+.brand small { font-family: var(--font-code); font-size: 12px; color: var(--muted); font-weight: 400; margin-left: 8px; letter-spacing: 0.04em; }
+.saved { font-size: 13px; color: var(--muted); }
+
+.rail { display: grid; grid-template-columns: 35fr 25fr; gap: 6px; }
+.rail .seg { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.rail .bar { height: 6px; background: var(--rule); border-radius: 3px; overflow: hidden; }
+.rail .fill { height: 100%; background: var(--mark); width: 0; transition: width .25s ease; }
+.rail .lbl { font-size: 12px; color: var(--muted); letter-spacing: 0.04em; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.sheet {
+  background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px;
+  padding: 28px clamp(18px, 4vw, 36px); display: flex; flex-direction: column; gap: 20px;
+}
+.cols { display: grid; grid-template-columns: 1fr; gap: 24px 56px; align-items: start; }
+.col { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+@media (min-width: 900px) {
+  .sheet { padding: 40px 48px; }
+  #intro .cols { grid-template-columns: 1.2fr 1fr; }
+  #qsheet .cols { grid-template-columns: 1fr 1.05fr; }
+  #qsheet .q-left { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 20px); }
+  #intro .covers { grid-template-columns: 1fr; }
+  #review { max-width: 760px; }
+}
+.eyebrow { font-family: var(--font-code); font-size: 12.5px; color: var(--muted); letter-spacing: 0.04em; display: flex; gap: 10px; flex-wrap: wrap; }
+.eyebrow b { color: var(--mark); font-weight: 500; }
+h1, h2 { font-family: var(--font-q); font-weight: 500; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(30px, 6vw, 42px); line-height: 1.1; letter-spacing: -0.015em; }
+h2 { font-size: clamp(22px, 3vw, 30px); line-height: 1.25; }
+.context { font-family: var(--font-q); font-size: 18px; line-height: 1.6; color: var(--ink); opacity: .86; margin: 0; max-width: 62ch; }
+p { margin: 0; max-width: 62ch; }
+.lede { font-size: 17px; color: var(--muted); }
+
+.options { display: flex; flex-direction: column; gap: 8px; }
+.opt {
+  display: grid; grid-template-columns: 26px 1fr; gap: 14px; align-items: start;
+  text-align: left; width: 100%; padding: 12px 14px; border-radius: 5px;
+  background: transparent; color: var(--ink); border: 1px solid var(--rule);
+  font: inherit; font-size: 16px; cursor: pointer;
+}
+.opt:hover { border-color: var(--mark); }
+.opt:focus-visible { outline: 2px solid var(--mark); outline-offset: 2px; }
+.opt .oval { width: 24px; height: 15px; margin-top: 4px; border: 1.5px solid var(--muted); border-radius: 50%; transition: background .12s; }
+.opt[aria-checked="true"] { border-color: var(--mark); background: var(--mark-soft); }
+.opt[aria-checked="true"] .oval { background: var(--ink); border-color: var(--ink); }
+.opt.reject { border-style: dashed; color: var(--muted); }
+
+.field { display: flex; flex-direction: column; gap: 8px; }
+.field label, .field .label { font-size: 14px; font-weight: 600; display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+.tag { font-size: 11.5px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--mark); }
+.hint { font-size: 13.5px; color: var(--muted); font-weight: 400; }
+.scale { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+.scale button {
+  font: inherit; font-size: 15px; font-variant-numeric: tabular-nums; padding: 9px 0; border-radius: 4px;
+  border: 1px solid var(--rule); background: transparent; color: var(--ink); cursor: pointer;
+}
+.scale button[aria-pressed="true"] { background: var(--ink); color: var(--sheet); border-color: var(--ink); }
+.scale button:focus-visible { outline: 2px solid var(--mark); outline-offset: 2px; }
+.scale-ends { display: flex; justify-content: space-between; font-size: 12.5px; color: var(--muted); }
+textarea, input[type="text"] {
+  font: inherit; font-size: 16px; color: var(--ink); background: var(--paper);
+  border: 1px solid var(--rule); border-radius: 5px; padding: 10px 12px; width: 100%;
+}
+textarea { min-height: 110px; resize: vertical; line-height: 1.5; }
+textarea:focus, input:focus { outline: 2px solid var(--mark); outline-offset: 1px; border-color: transparent; }
+
+.nav { display: flex; justify-content: space-between; gap: 10px; align-items: center; flex-wrap: wrap; }
+.btn {
+  font: inherit; font-weight: 600; font-size: 15px; padding: 11px 20px; border-radius: 5px; cursor: pointer;
+  border: 1px solid var(--ink); background: var(--ink); color: var(--sheet);
+}
+.btn.ghost { background: transparent; color: var(--ink); border-color: var(--rule); }
+.btn:disabled { opacity: .45; cursor: default; }
+.btn:focus-visible { outline: 2px solid var(--mark); outline-offset: 2px; }
+.linkish { background: none; border: none; color: var(--muted); font: inherit; font-size: 14px; text-decoration: underline; cursor: pointer; padding: 4px; }
+
+.label-sm { font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.covers { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 0; border-top: 1px solid var(--rule); }
+.covers div { padding: 12px 0; border-bottom: 1px solid var(--rule); display: flex; gap: 12px; align-items: baseline; padding-right: 12px; }
+.covers b { font-family: var(--font-code); font-weight: 500; color: var(--mark); font-size: 13px; font-variant-numeric: tabular-nums; }
+.facts { display: flex; gap: 18px; flex-wrap: wrap; font-size: 14px; color: var(--muted); }
+.facts span b { color: var(--ink); font-variant-numeric: tabular-nums; }
+.notice { font-size: 14px; color: var(--muted); border-left: 3px solid var(--rule); padding-left: 12px; }
+
+.grid-missing { display: flex; flex-wrap: wrap; gap: 6px; }
+.grid-missing button { font-family: var(--font-code); font-size: 12.5px; padding: 4px 8px; border-radius: 4px; border: 1px solid var(--warn); color: var(--warn); background: transparent; cursor: pointer; }
+pre.blob { font-family: var(--font-code); font-size: 12px; background: var(--paper); border: 1px solid var(--rule); border-radius: 5px; padding: 12px; max-height: 160px; overflow: auto; white-space: pre-wrap; word-break: break-all; margin: 0; }
+.status { font-size: 14px; }
+.status.ok { color: var(--mark); }
+.status.err { color: var(--warn); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">Politype <small>60 QUESTIONS</small></div>
+    <div class="saved" id="saved"></div>
+  </header>
+
+  <div class="rail" id="rail" hidden>
+    <div class="seg"><div class="bar"><div class="fill" id="fillP"></div></div><div class="lbl">Philosophy · 35</div></div>
+    <div class="seg"><div class="bar"><div class="fill" id="fillU"></div></div><div class="lbl">US policy · 25</div></div>
+  </div>
+
+  <!-- Intro -->
+  <section class="sheet" id="intro">
+    <div class="cols">
+    <div class="col">
+    <div class="eyebrow"><span>A questionnaire about how you think about politics</span></div>
+    <h1>See how your political views fit together, and where they conflict.</h1>
+    <p class="lede">35 questions on values, rights, justice and institutions. Then 25 on concrete US policy. You get back a written report on how your views fit together.</p>
+    <p>Your explanations matter more than your multiple-choice picks. Most of the report comes from how you explain your answers. Ten questions are marked as worth explaining. Write as casually as you like.</p>
+    <p class="notice">Your answers are read by the person who sent you this link, and analyzed with Claude to write your report. Your report is only shared if you choose to share it.</p>
+    <div class="facts" id="introFacts"><span>Saves as you go, so you can stop and come back</span></div>
+    <p class="status ok" id="sentNote" hidden></p>
+    <div class="nav">
+      <button class="btn" id="startBtn" type="button">Start</button>
+      <button class="linkish" id="resetBtn" type="button" hidden>Start over</button>
+    </div>
+    </div>
+    <div class="col">
+    <span class="label-sm">What your report covers</span>
+    <div class="covers">
+      <div><b>01</b><span>Your political portrait</span></div>
+      <div><b>02</b><span>Where you fall on seven political scales</span></div>
+      <div><b>03</b><span>Traditions, thinkers and parties</span></div>
+      <div><b>04</b><span>Where your views conflict</span></div>
+      <div><b>05</b><span>Potential blind spots</span></div>
+      <div><b>06</b><span>What your answers say about you</span></div>
+    </div>
+    </div>
+    </div>
+  </section>
+
+  <!-- Question -->
+  <section class="sheet" id="qsheet" hidden>
+    <div class="cols">
+    <div class="col q-left">
+    <div class="eyebrow"><b id="qcode">P1</b><span id="qround"></span><span id="qcount"></span></div>
+    <p class="context" id="qcontext"></p>
+    <h2 id="qprompt"></h2>
+    </div>
+    <div class="col">
+    <div class="options" id="qopts" role="radiogroup" aria-labelledby="qprompt"></div>
+    <div class="field">
+      <span class="label" id="impLabel">How much does this issue matter to you? <span class="hint">Optional</span></span>
+      <div class="scale" id="qimp" role="group" aria-labelledby="impLabel"></div>
+      <div class="scale-ends"><span>Barely</span><span>A defining issue</span></div>
+    </div>
+    <div class="field">
+      <label for="qexpl"><span>Why?</span> <span class="tag" id="qexplTag">Worth explaining</span> <span class="hint" id="qexplHint">Optional</span></label>
+      <textarea id="qexpl" placeholder="What made you pick this? What would change your mind? Where do the options fall short?"></textarea>
+    </div>
+    <div class="nav">
+      <button class="btn ghost" id="backBtn" type="button">Back</button>
+      <button class="btn" id="nextBtn" type="button">Next</button>
+    </div>
+    </div>
+    </div>
+  </section>
+
+  <!-- Review and submit -->
+  <section class="sheet" id="review" hidden>
+    <div class="eyebrow"><span>Last step</span></div>
+    <h2>Review and send your answers</h2>
+    <div class="facts" id="reviewFacts"></div>
+    <div class="field" id="missingWrap" hidden>
+      <span class="label">Unanswered <span class="hint">Tap one to go back to it</span></span>
+      <div class="grid-missing" id="missing"></div>
+    </div>
+    <div class="field">
+      <label for="rname">Your name or nickname</label>
+      <input type="text" id="rname" autocomplete="nickname" placeholder="So your report has a name on it">
+    </div>
+    <div class="nav">
+      <button class="btn ghost" id="reviewBack" type="button">Back to questions</button>
+      <button class="btn" id="submitBtn" type="button">Send answers</button>
+    </div>
+    <p class="status" id="submitStatus" role="status"></p>
+    <div class="field" id="copyWrap" hidden>
+      <span class="label">Your answers <span class="hint">Copy this and send it to the person who shared the quiz</span></span>
+      <pre class="blob" id="blob"></pre>
+      <div class="nav"><button class="btn ghost" id="copyBtn" type="button">Copy answers</button></div>
+    </div>
+  </section>
+</div>
+
+<script>
+(() => {
+  const DRAFT_KEY = "politype-draft-v1";
+  const $ = (id) => document.getElementById(id);
+  let questions = [];      // flat list
+  let state = { i: 0, answers: {}, name: "" };
+  let db = null, uid = null;
+
+  // ----- storage -----
+  // Every change saves to this browser right away. When the viewer's account can
+  // write to the page's database, the draft also saves to their private space
+  // (data/users/<id>/draft), so it survives a cleared browser or another device.
+  // mode: "local" until the account save is confirmed, then "account";
+  // "browser-only" when the account cannot write.
+  let mode = "local";
+  function loadDraft() {
+    try { const s = JSON.parse(localStorage.getItem(DRAFT_KEY) || "null"); if (s && s.answers) state = { ...state, ...s }; } catch (e) {}
+  }
+  function setSaved(text) { $("saved").textContent = text; }
+  let saveTimer = null, remoteTimer = null, remoteBusy = false, remoteAgain = false;
+  function saveDraft() {
+    state.updated_at = Date.now();
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(() => {
+      try { localStorage.setItem(DRAFT_KEY, JSON.stringify(state)); } catch (e) {}
+      if (mode !== "account") setSaved(mode === "browser-only" ? "Saved in this browser only" : "Saved in this browser");
+    }, 300);
+    if (db && uid && mode !== "browser-only") {
+      clearTimeout(remoteTimer);
+      remoteTimer = setTimeout(saveRemote, 1500);
+    }
+  }
+  async function saveRemote() {
+    if (remoteBusy) { remoteAgain = true; return; }   // one write at a time
+    remoteBusy = true;
+    state.updated_at ||= Date.now();
+    try {
+      await db.doc(`data/users/${uid}/draft`).set({ state: JSON.stringify(state), updated_at: state.updated_at });
+      mode = "account"; setSaved("Saved to your account");
+    } catch (e) {
+      if (e?.code === "unavailable") { remoteAgain = true; }
+      else { mode = "browser-only"; setSaved("Saved in this browser only"); }
+    }
+    remoteBusy = false;
+    if (remoteAgain) { remoteAgain = false; remoteTimer = setTimeout(saveRemote, 3000); }
+  }
+  async function loadRemote() {
+    try {
+      const snap = await db.doc(`data/users/${uid}/draft`).get();
+      if (snap.exists) {
+        const d = snap.data();
+        if ((d.updated_at || 0) > (state.updated_at || 0)) {
+          const remote = JSON.parse(d.state);
+          if (remote && remote.answers) { state = { ...state, ...remote }; try { localStorage.setItem(DRAFT_KEY, JSON.stringify(state)); } catch (e) {} }
+        }
+      }
+      const sent = await db.doc("submissions/" + uid).get();
+      if (sent.exists) submittedAt = sent.data().submitted_at || null;
+      // Confirm the account can write by saving the current draft once.
+      if (answeredCount() > 0 || state.name) await saveRemote();
+      else { mode = "account"; setSaved(""); }
+    } catch (e) { mode = "browser-only"; }
+    refreshResume();
+  }
+  let submittedAt = null;
+
+  // ----- data -----
+  async function loadQuestions() {
+    const res = await fetch("questions.json");
+    const data = await res.json();
+    for (const part of data.parts) for (const rnd of part.rounds) for (const q of rnd.questions)
+      questions.push({ ...q, part: part.id, partTitle: part.title, round: rnd.number, roundTitle: rnd.title });
+  }
+  const ans = (q) => (state.answers[q.id] ||= { option: null, importance: null, explanation: "" });
+  const answeredCount = () => questions.filter((q) => state.answers[q.id]?.option).length;
+  const explainedCount = () => questions.filter((q) => (state.answers[q.id]?.explanation || "").trim()).length;
+
+  // ----- rendering -----
+  function show(id) {
+    for (const s of ["intro", "qsheet", "review"]) $(s).hidden = s !== id;
+    $("rail").hidden = id === "intro";
+    window.scrollTo({ top: 0 });
+  }
+  function renderRail() {
+    const of = (p) => questions.filter((q) => q.part === p);
+    for (const p of ["P", "U"]) {
+      const qs = of(p), done = qs.filter((q) => state.answers[q.id]?.option).length;
+      $("fill" + p).style.width = (qs.length ? (100 * done / qs.length) : 0) + "%";
+    }
+  }
+  function renderQuestion() {
+    const q = questions[state.i], a = ans(q);
+    $("qcode").textContent = q.id;
+    $("qround").textContent = `${q.partTitle} · Round ${q.round}: ${q.roundTitle}`;
+    $("qcount").textContent = `${state.i + 1} of ${questions.length}`;
+    $("qcontext").textContent = q.context || "";
+    $("qcontext").hidden = !q.context;
+    $("qprompt").textContent = q.prompt;
+
+    const box = $("qopts"); box.textContent = "";
+    for (const o of q.options) {
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "opt" + (o.added ? " reject" : ""); b.id = "opt-" + o.id.replace(".", "-");
+      b.setAttribute("role", "radio"); b.setAttribute("aria-checked", String(a.option === o.id));
+      const oval = document.createElement("span"); oval.className = "oval"; oval.setAttribute("aria-hidden", "true");
+      const t = document.createElement("span"); t.textContent = o.text;
+      b.append(oval, t);
+      b.addEventListener("click", () => { a.option = o.id; saveDraft(); renderQuestion(); renderRail(); });
+      box.append(b);
+    }
+
+    const imp = $("qimp"); imp.textContent = "";
+    for (let n = 1; n <= 5; n++) {
+      const b = document.createElement("button");
+      b.type = "button"; b.textContent = n; b.id = `imp-${n}`;
+      b.setAttribute("aria-pressed", String(a.importance === n));
+      b.setAttribute("aria-label", `Importance ${n} of 5`);
+      b.addEventListener("click", () => { a.importance = a.importance === n ? null : n; saveDraft(); renderQuestion(); });
+      imp.append(b);
+    }
+
+    const prompted = q.explain === "prompted";
+    $("qexplTag").hidden = !prompted;
+    $("qexplHint").textContent = prompted ? "A few sentences help a lot" : "Optional";
+    const ta = $("qexpl");
+    if (document.activeElement !== ta) ta.value = a.explanation || "";
+
+    $("backBtn").disabled = state.i === 0;
+    $("nextBtn").textContent = state.i === questions.length - 1 ? "Review" : "Next";
+  }
+  function go(i) {
+    state.i = Math.max(0, Math.min(questions.length - 1, i));
+    saveDraft(); $("qexpl").blur(); renderQuestion(); renderRail(); show("qsheet");
+  }
+  function renderReview() {
+    const missing = questions.filter((q) => !state.answers[q.id]?.option);
+    $("reviewFacts").innerHTML = "";
+    const facts = [[answeredCount(), "of 60 answered"], [explainedCount(), "explained"],
+      [questions.filter((q) => state.answers[q.id]?.importance).length, "rated for importance"]];
+    for (const [n, l] of facts) { const s = document.createElement("span"); const b = document.createElement("b"); b.textContent = n; s.append(b, " " + l); $("reviewFacts").append(s); }
+    $("missingWrap").hidden = !missing.length;
+    $("missing").textContent = "";
+    for (const q of missing) {
+      const b = document.createElement("button"); b.type = "button"; b.textContent = q.id;
+      b.addEventListener("click", () => go(questions.indexOf(q)));
+      $("missing").append(b);
+    }
+    $("rname").value = state.name || "";
+    $("submitStatus").className = "status";
+    $("submitStatus").textContent = mode === "browser-only"
+      ? `${NO_SEND} After you press Send, copy your answers and send them to the person who shared the quiz.`
+      : (submittedAt ? `You sent answers on ${new Date(submittedAt).toLocaleDateString()}. Sending again replaces them.` : "");
+    show("review");
+  }
+
+  // ----- submission -----
+  function payload() {
+    const answers = {};
+    for (const q of questions) {
+      const a = state.answers[q.id];
+      if (a?.option) answers[q.id] = { option: a.option, importance: a.importance || null, explanation: (a.explanation || "").trim() };
+    }
+    return { version: 1, respondent: { name: (state.name || "").trim() || "Anonymous" }, submitted_at: new Date().toISOString(), answers };
+  }
+  // Outside claude.ai (for example on GitHub Pages) there is no account to send to.
+  const NO_SEND = window.claude ? "Your account can't send answers through this page." : "This page does not send your answers anywhere.";
+  async function submit() {
+    if (answeredCount() < 40) {
+      $("submitStatus").className = "status err";
+      $("submitStatus").textContent = `Answer at least 40 questions before sending. You have answered ${answeredCount()}.`;
+      return;
+    }
+    const p = payload();
+    $("blob").textContent = JSON.stringify(p);
+    $("copyWrap").hidden = false;
+    $("submitStatus").className = "status";
+    if (db && uid && mode !== "browser-only") {
+      $("submitStatus").textContent = "Sending…";
+      for (let attempt = 0; attempt < 2; attempt++) {
+        try {
+          await db.doc("submissions/" + uid).set(p);
+          submittedAt = p.submitted_at;
+          $("submitStatus").className = "status ok";
+          $("submitStatus").textContent = "Sent. Your answers are saved to your account. You can come back and change them, then send again.";
+          $("copyWrap").hidden = true;
+          return;
+        } catch (e) {
+          if (e?.code !== "unavailable" || attempt) break;
+          await new Promise((r) => setTimeout(r, 800 + Math.random() * 800));
+        }
+      }
+    }
+    $("submitStatus").textContent = `${NO_SEND} Copy them below and send them to the person who shared the quiz.`;
+  }
+  async function copy() {
+    const text = $("blob").textContent;
+    try { await navigator.clipboard.writeText(text); $("copyBtn").textContent = "Copied"; }
+    catch (e) {
+      const r = document.createRange(); r.selectNodeContents($("blob"));
+      const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r);
+      $("copyBtn").textContent = "Selected. Press Copy";
+    }
+  }
+
+  // ----- wiring -----
+  $("startBtn").addEventListener("click", () => go(state.i || 0));
+  $("resetBtn").addEventListener("click", () => {
+    state = { i: 0, answers: {}, name: "" };
+    try { localStorage.removeItem(DRAFT_KEY); } catch (e) {}
+    if (db && uid && mode === "account") db.doc(`data/users/${uid}/draft`).delete().catch(() => {});
+    $("startBtn").textContent = "Start"; $("resetBtn").hidden = true; renderRail();
+  });
+  $("backBtn").addEventListener("click", () => go(state.i - 1));
+  $("nextBtn").addEventListener("click", () => state.i === questions.length - 1 ? renderReview() : go(state.i + 1));
+  $("qexpl").addEventListener("input", (e) => { ans(questions[state.i]).explanation = e.target.value; saveDraft(); });
+  $("reviewBack").addEventListener("click", () => go(state.i));
+  $("rname").addEventListener("input", (e) => { state.name = e.target.value; saveDraft(); });
+  $("submitBtn").addEventListener("click", submit);
+  $("copyBtn").addEventListener("click", copy);
+
+  function refreshResume() {
+    if (!questions.length) return;
+    renderRail();
+    if (answeredCount() > 0) { $("startBtn").textContent = `Continue at question ${state.i + 1}`; $("resetBtn").hidden = false; }
+    $("sentNote").hidden = !submittedAt;
+    if (submittedAt) $("sentNote").textContent = `You sent your answers on ${new Date(submittedAt).toLocaleDateString()}. Sending again replaces them.`;
+  }
+  loadDraft();
+  loadQuestions().then(() => {
+    refreshResume();
+  }).catch(() => { $("startBtn").disabled = true; $("saved").textContent = "Questions failed to load. Reload the page."; });
+
+  // Capabilities light up later, if this viewer can use them.
+  (async () => {
+    try {
+      const [d, u] = await Promise.all([window.claude?.use?.("db"), window.claude?.use?.("user")]);
+      if (d && u) { uid = await u.id(); if (uid) { db = d; await loadRemote(); return; } }
+    } catch (e) {}
+    mode = "browser-only";
+    if (answeredCount() > 0) setSaved("Saved in this browser only");
+  })();
+})();
+</script>
+</body></html>
