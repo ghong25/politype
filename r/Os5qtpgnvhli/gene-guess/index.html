@@ -1,0 +1,350 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow"><style>html,body{margin:0;padding:0}</style></head><body><title>Guessing Gene</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column in the Politype report style. Score sheet first,
+   then a per-topic dot chart, then the misses grouped by pattern, then every answer. */
+:root {
+  --paper: #EEF1F4;
+  --sheet: #FBFCFD;
+  --ink: #15233F;
+  --muted: #5A6578;
+  --rule: #CDD4DD;
+  --track: #DDE2E8;
+  --actual: #0B8068;
+  --guess: #C0581A;
+  --actual-soft: #E2F1EC;
+  --guess-soft: #F7E9DE;
+  --font-q: "Newsreader", Georgia, "Times New Roman", serif;
+  --font-ui: "Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-code: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0E1318; --sheet: #151C23; --ink: #E4E9EF; --muted: #98A3B3; --rule: #2B3540; --track: #2B3540;
+    --actual: #2E9E80; --guess: #D27A3E; --actual-soft: #16302A; --guess-soft: #3A2417;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0E1318; --sheet: #151C23; --ink: #E4E9EF; --muted: #98A3B3; --rule: #2B3540; --track: #2B3540;
+  --actual: #2E9E80; --guess: #D27A3E; --actual-soft: #16302A; --guess-soft: #3A2417;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--paper); color: var(--ink); font-family: var(--font-ui); font-size: 16px; line-height: 1.6; }
+.wrap {
+  max-width: 920px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px 96px;
+  display: flex; flex-direction: column; gap: 44px;
+}
+.wrap > * { min-width: 0; }
+h1, h2, h3 { font-family: var(--font-q); font-weight: 500; margin: 0; text-wrap: balance; }
+p { margin: 0; }
+ul { margin: 0; padding: 0; list-style: none; }
+.muted { color: var(--muted); }
+.code { font-family: var(--font-code); font-size: 12.5px; letter-spacing: 0.03em; }
+.eyebrow { font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+
+.sheet { background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; padding: clamp(22px, 5vw, 40px); display: flex; flex-direction: column; gap: 22px; }
+.sheet h1 { font-size: clamp(34px, 7vw, 52px); line-height: 1.05; letter-spacing: -0.02em; }
+.sheet .tagline { font-family: var(--font-q); font-style: italic; font-size: clamp(18px, 3.2vw, 21px); line-height: 1.45; max-width: 62ch; }
+.scores { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+.score { border-top: 1px solid var(--rule); padding-top: 14px; display: flex; flex-direction: column; gap: 4px; }
+.score .num { font-family: var(--font-q); font-size: 44px; line-height: 1; font-variant-numeric: tabular-nums; }
+.score .num small { font-size: 22px; color: var(--muted); }
+
+section.s { display: flex; flex-direction: column; gap: 18px; }
+section.s > h2 { font-size: clamp(26px, 4.6vw, 32px); }
+section.s > .intro { max-width: 65ch; color: var(--muted); }
+
+/* Dot chart */
+.legend { display: flex; gap: 20px; flex-wrap: wrap; font-size: 14px; }
+.legend span { display: inline-flex; align-items: center; gap: 8px; }
+.key { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+.key.a { background: var(--actual); }
+.key.g { border: 2.5px solid var(--guess); background: var(--sheet); }
+.chart { background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; padding: 20px clamp(16px, 4vw, 28px) 12px; display: flex; flex-direction: column; gap: 6px; position: relative; }
+.arow { display: flex; flex-direction: column; gap: 4px; padding-block: 8px; border-bottom: 1px solid var(--rule); }
+.arow:last-of-type { border-bottom: 0; }
+.ahead { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; align-items: baseline; }
+.ahead b { font-weight: 600; }
+.ahead .gap { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.ahead .gap.big { color: var(--ink); font-weight: 600; }
+.plot { position: relative; height: 30px; margin-inline: 8px; }
+.plot .tick { position: absolute; top: 6px; bottom: 6px; width: 1px; background: var(--track); }
+.plot .tick.zero { background: var(--rule); width: 1.5px; }
+.plot .base { position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: var(--track); }
+.plot .span { position: absolute; top: 50%; height: 2px; margin-top: -1px; background: var(--muted); opacity: 0.55; }
+.dot { position: absolute; top: 50%; width: 22px; height: 22px; margin: -11px 0 0 -11px; border-radius: 50%; display: grid; place-items: center; cursor: default; background: transparent; border: 0; padding: 0; }
+.dot i { width: 12px; height: 12px; border-radius: 50%; display: block; box-shadow: 0 0 0 2px var(--sheet); }
+.dot.a i { background: var(--actual); }
+.dot.g i { width: 13px; height: 13px; border: 2.5px solid var(--guess); background: var(--sheet); }
+.dot:focus-visible { outline: 2px solid var(--ink); outline-offset: 1px; }
+.ends { display: flex; justify-content: space-between; gap: 12px; font-size: 12px; color: var(--muted); }
+.scale { position: relative; height: 16px; margin-inline: 8px; font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.scale span { position: absolute; transform: translateX(-50%); }
+.tip { position: absolute; pointer-events: none; background: var(--ink); color: var(--sheet); font-size: 13px; padding: 6px 10px; border-radius: 4px; white-space: nowrap; z-index: 5; transform: translate(-50%, -100%); }
+
+/* Patterns */
+.pat { background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; padding: clamp(18px, 4vw, 28px); display: flex; flex-direction: column; gap: 14px; }
+.pat h3 { font-size: 23px; }
+.pat .lede { max-width: 65ch; }
+.pairs { display: flex; flex-direction: column; gap: 12px; }
+.pair { border-top: 1px solid var(--rule); padding-top: 12px; display: flex; flex-direction: column; gap: 8px; }
+.ph { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+.qid { color: var(--muted); }
+.qt { font-weight: 600; flex: 1 1 240px; min-width: 0; }
+.imp { font-size: 13px; font-variant-numeric: tabular-nums; }
+.ga { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.ga > div { min-width: 0; display: flex; flex-direction: column; gap: 4px; font-size: 15px; }
+.lab { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; display: inline-flex; align-items: center; gap: 6px; }
+.lab::before { content: ""; width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+.lab.lg::before { border: 2px solid var(--guess); }
+.lab.la::before { background: var(--actual); }
+@media (max-width: 560px) { .ga { grid-template-columns: 1fr; } }
+.right { background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; padding: clamp(18px, 4vw, 28px); display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 8px 24px; }
+
+/* Full table */
+.filters { display: flex; gap: 8px; flex-wrap: wrap; }
+.filters button { font: inherit; font-size: 14px; padding: 6px 14px; border-radius: 999px; border: 1px solid var(--rule); background: var(--sheet); color: var(--ink); cursor: pointer; }
+.filters button[aria-pressed="true"] { background: var(--ink); color: var(--sheet); border-color: var(--ink); }
+.filters button:focus-visible { outline: 2px solid var(--actual); outline-offset: 2px; }
+.tablewrap { overflow-x: auto; background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; }
+table { border-collapse: collapse; width: 100%; min-width: 680px; font-size: 14.5px; }
+th, td { text-align: left; vertical-align: top; padding: 10px 14px; border-bottom: 1px solid var(--rule); }
+th { font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.pill { display: inline-block; font-size: 12px; font-weight: 600; padding: 1px 8px; border-radius: 999px; white-space: nowrap; }
+.pill.y { background: var(--actual-soft); color: var(--ink); }
+.pill.n { background: var(--guess-soft); color: var(--ink); }
+td .why { margin-top: 6px; font-family: var(--font-q); font-style: italic; color: var(--muted); max-width: 60ch; }
+.foot { font-size: 13px; color: var(--muted); max-width: 65ch; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+  <header class="sheet">
+    <div class="eyebrow">Politype · Your guess vs. Gene's answers · October 31, 2026</div>
+    <h1>Guessing Gene</h1>
+    <p class="tagline">You pictured a progressive who defers to democratic majorities and is comfortable with deficit spending. Gene is progressive on social issues, but he is a deficit hawk, tough on crime, and firm on rights against majorities. He is also more hawkish on China than you thought.</p>
+    <div class="scores">
+      <div class="score"><span class="num">17<small> of 60</small></span><span class="muted">answers you guessed exactly</span></div>
+      <div class="score"><span class="num">5<small> of 7</small></span><span class="muted">topic scores within 0.5 of his</span></div>
+    </div>
+  </header>
+
+  <section class="s">
+    <h2>Scores by topic</h2>
+    <p class="intro">Each topic is the average of the coded answers on that topic, on a scale from -2 to +2. Your guess and his answers are close on five topics. They are far apart on fiscal orientation and political authority.</p>
+    <div class="legend"><span><i class="key g"></i>Your guess</span><span><i class="key a"></i>Gene</span></div>
+    <div class="chart" id="chart"></div>
+  </section>
+
+  <section class="s">
+    <h2>Where you missed</h2>
+    <p class="intro">Your misses group into six patterns. Each shows the questions behind it.</p>
+    <article class="pat"><h3>Deficits and entitlements</h3><p class="lede">This was your biggest miss by topic score. You guessed he would spend to preserve programs. He makes deficit reduction a central priority and would slow Social Security and Medicare benefit growth. You did get his tax position right: moderately higher taxes on high earners (U1).</p><ul class="pairs"><li class="pair">
+  <div class="ph"><span class="code qid">U2</span><span class="qt">Federal spending and deficits</span></div>
+  <div class="ga"><div><span class="lab lg">Your guess</span><p>Prioritize growth-enhancing structural reforms over near-term deficit targets</p></div>
+  <div><span class="lab la">Gene</span><p>Make deficit reduction a central priority through meaningful spending reforms and some revenue measures</p></div></div>
+</li><li class="pair">
+  <div class="ph"><span class="code qid">U20</span><span class="qt">Social Security and Medicare fiscal reform</span></div>
+  <div class="ga"><div><span class="lab lg">Your guess</span><p>Increase taxes on high earners and capital income to preserve or expand existing benefits</p></div>
+  <div><span class="lab la">Gene</span><p>Prioritize slowing benefit growth, means-testing, and adjusting retirement eligibility while protecting poorer recipients</p></div></div>
+</li><li class="pair">
+  <div class="ph"><span class="code qid">U14</span><span class="qt">College affordability and student loans</span></div>
+  <div class="ga"><div><span class="lab lg">Your guess</span><p>Expand targeted grants while limiting excessive borrowing and holding institutions accountable for cost and outcomes</p></div>
+  <div><span class="lab la">Gene</span><p>Reduce federal lending and subsidies significantly, relying more on institutional competition and private financing</p></div></div>
+</li></ul></article>
+<article class="pat"><h3>Rights against majorities</h3><p class="lede">You guessed he would defer to elected majorities and allow limits on speech. He picked the firm rights option every time: rights constrain majorities, courts should enforce them, and speech and privacy deserve strong protection.</p><ul class="pairs"><li class="pair">
+  <div class="ph"><span class="code qid">P19</span><span class="qt">Democratic legitimacy versus constitutional rights</span></div>
+  <div class="ga"><div><span class="lab lg">Your guess</span><p>Only if the constitutional text clearly and unambiguously forbids the restriction.</p></div>
+  <div><span class="lab la">Gene</span><p>Absolutely. Fundamental rights constrain even overwhelming democratic majorities.</p></div></div>
+</li><li class="pair">
+  <div class="ph"><span class="code qid">P21</span><span class="qt">Judicial power and democratic accountability</span></div>
+  <div class="ga"><div><span class="lab lg">Your guess</span><p>Judicial review should be narrow; elected institutions deserve substantial deference</p></div>
+  <div><span class="lab la">Gene</span><p>Strong judicial review, including robust protection of rights against majorities</p></div></div>
+</li><li class="pair">
+  <div class="ph"><span class="code qid">P11</span><span class="qt">Are individual rights inviolable?</span></div>
+  <div class="ga"><div><span class="lab lg">Your guess</span><p>Probably not, although sufficiently catastrophic consequences could justify exceptions.</p></div>
+  <div><span class="lab la">Gene</span><p>No. Certain rights should not be violated, even to maximize welfare.</p></div></div>
+</li><li class="pair">
+  <div class="ph"><span class="code qid">P28</span><span class="qt">Free speech and harmful expression</span></div>
+  <div class="ga"><div><span class="lab lg">Your guess</span><p>Possibly, if sufficiently compelling evidence establishes substantial societal harm</p></div>
+  <div><span class="lab la">Gene</span><p>No; political expression should remain protected even when deeply harmful or offensive</p></div></div>
+</li><li class="pair">
+  <div class="ph"><span class="code qid">U25</span><span class="qt">National security and domestic surveillance</span></div>
+  <div class="ga"><div><span class="lab lg">Your guess</span><p>Permit narrowly targeted expansions where agencies can demonstrate specific operational needs</p></div>
+  <div><span class="lab la">Gene</span><p>Substantially restrict existing surveillance authorities and require individualized warrants for more activities</p></div></div>
+</li></ul></article>
+<article class="pat"><h3>Crime and public order</h3><p class="lede">You guessed he would lean toward prevention and alternatives to arrest. He wrote that Democrats have been too soft on crime, and he wants laws enforced and public disorder stopped. His civil liberties score lands near your guess only because these misses cancel out the ones under rights. You did get his drug (U10) and sentencing (U9) positions right.</p><ul class="pairs"><li class="pair">
+  <div class="ph"><span class="code qid">P34</span><span class="qt">Crime, punishment, and the rule of law</span></div>
+  <div class="ga"><div><span class="lab lg">Your guess</span><p>Emphasize rehabilitation, prevention, and reducing incarceration while strictly protecting defendants&#x27; rights</p></div>
+  <div><span class="lab la">Gene</span><p>Prioritize punishment and public order, accepting some additional restrictions to reduce crime</p></div></div>
+</li><li class="pair">
+  <div class="ph"><span class="code qid">U8</span><span class="qt">Policing and public disorder</span></div>
+  <div class="ga"><div><span class="lab lg">Your guess</span><p>Focus primarily on prevention, social services, and alternatives to arrest for low-level offenses</p></div>
+  <div><span class="lab la">Gene</span><p>Consistently enforce both minor and serious offenses, with proportionate sanctions, accountable policing, and diversion where effective</p></div></div>
+</li><li class="pair">
+  <div class="ph"><span class="code qid">P30</span><span class="qt">Public order versus civil liberties</span></div>
+  <div class="ga"><div><span class="lab lg">Your guess</span><p>Strong protest rights, tolerating substantial disruption unless violence or direct threats occur</p></div>
+  <div><span class="lab la">Gene</span><p>Protect protest rights while using narrow, content-neutral restrictions on severe disruption</p></div></div>
+</li></ul></article>
+<article class="pat"><h3>Equality: the worst-off, not groups</h3><p class="lede">You guessed he would favor group-based remedies. He opposes group preferences. He gives extra moral weight to whoever is worst off and would reduce extreme gaps in outcomes. He is also less troubled by inequality itself than you guessed.</p><ul class="pairs"><li class="pair">
+  <div class="ph"><span class="code qid">P14</span><span class="qt">Group disadvantage and individual fairness</span></div>
+  <div class="ga"><div><span class="lab lg">Your guess</span><p>Support the preference; reducing structural disadvantage can justify unequal individual treatment.</p></div>
+  <div><span class="lab la">Gene</span><p>Oppose differential treatment based on group identity; equal individual treatment is paramount.</p></div></div>
+</li><li class="pair">
+  <div class="ph"><span class="code qid">P10</span><span class="qt">Equality of opportunity versus equality of outcomes</span></div>
+  <div class="ga"><div><span class="lab lg">Your guess</span><p>Persistent group disparities justify interventions specifically designed to reduce those gaps</p></div>
+  <div><span class="lab la">Gene</span><p>Actively reduce extreme disparities in outcomes through redistribution and structural reform</p></div></div>
+</li><li class="pair">
+  <div class="ph"><span class="code qid">P16</span><span class="qt">Do you give special moral weight to the worst-off?</span></div>
+  <div class="ga"><div><span class="lab lg">Your guess</span><p>No. Equal gains in actual well-being have equal moral value, regardless of who receives them.</p></div>
+  <div><span class="lab la">Gene</span><p>Yes. An equal benefit matters morally more when it goes to someone worse off.</p></div></div>
+</li><li class="pair">
+  <div class="ph"><span class="code qid">P2</span><span class="qt">How do you view economic inequality?</span></div>
+  <div class="ga"><div><span class="lab lg">Your guess</span><p>Fundamentally unjust when people have very different living standards</p></div>
+  <div><span class="lab la">Gene</span><p>Acceptable, but excessive inequality threatens opportunity and society</p></div></div>
+</li></ul></article>
+<article class="pat"><h3>Economics, in both directions</h3><p class="lede">Your misses here went both ways, so his economic score looks close to your guess even though many answers differ. In principle he is more pro-market than you guessed. On specific policies he is more willing to intervene than you guessed: antitrust, climate, industrial policy, and healthcare.</p><ul class="pairs"><li class="pair">
+  <div class="ph"><span class="code qid">P7</span><span class="qt">Markets versus government</span></div>
+  <div class="ga"><div><span class="lab lg">Your guess</span><p>A mixed economy, with substantial public provision and regulation where warranted</p></div>
+  <div><span class="lab la">Gene</span><p>Markets should be the default, with government correcting identifiable failures</p></div></div>
+</li><li class="pair">
+  <div class="ph"><span class="code qid">P27</span><span class="qt">Concentrated private power</span></div>
+  <div class="ga"><div><span class="lab lg">Your guess</span><p>Generally defer to voluntary market arrangements and property rights</p></div>
+  <div><span class="lab la">Gene</span><p>Intervene selectively, including through competition policy and safeguards against arbitrary exclusion</p></div></div>
+</li><li class="pair">
+  <div class="ph"><span class="code qid">U4</span><span class="qt">Business regulation and competition</span></div>
+  <div class="ga"><div><span class="lab lg">Your guess</span><p>Substantially deregulate and rely more on market competition to discipline firms</p></div>
+  <div><span class="lab la">Gene</span><p>Strengthen antitrust enforcement while simplifying unnecessarily burdensome regulations</p></div></div>
+</li><li class="pair">
+  <div class="ph"><span class="code qid">P33</span><span class="qt">Climate change and economic growth</span></div>
+  <div class="ga"><div><span class="lab lg">Your guess</span><p>Prioritize affordable energy and growth, relying predominantly on innovation rather than restrictive climate policy</p></div>
+  <div><span class="lab la">Gene</span><p>A strong carbon-pricing framework combined with targeted public investment and carefully justified regulation</p></div></div>
+</li><li class="pair">
+  <div class="ph"><span class="code qid">U15</span><span class="qt">Industrial policy and domestic manufacturing</span></div>
+  <div class="ga"><div><span class="lab lg">Your guess</span><p>Focus on research, infrastructure, skilled immigration, and competitiveness rather than firm-specific subsidies</p></div>
+  <div><span class="lab la">Gene</span><p>Use targeted subsidies and public investment for genuinely strategic sectors, with performance requirements</p></div></div>
+</li><li class="pair">
+  <div class="ph"><span class="code qid">U5</span><span class="qt">Healthcare system</span></div>
+  <div class="ga"><div><span class="lab lg">Your guess</span><p>A universal public option with automatic or near-universal coverage while retaining private insurers</p></div>
+  <div><span class="lab la">Gene</span><p>Single-payer national insurance replacing most private primary insurance</p></div></div>
+</li></ul></article>
+<article class="pat"><h3>China and allies</h3><p class="lede">You guessed he would favor trade with China and a leading US role in alliances. He calls China the biggest geopolitical threat the US faces and wants strong limits on strategic technology. On alliances he wants allies to pay more. On P35 his explanation argues for caution, but he picked the more interventionist option.</p><ul class="pairs"><li class="pair">
+  <div class="ph"><span class="code qid">U23</span><span class="qt">China, trade, and economic security</span></div>
+  <div class="ga"><div><span class="lab lg">Your guess</span><p>Use narrowly targeted national-security controls while generally favoring expanded trade and economic engagement</p></div>
+  <div><span class="lab la">Gene</span><p>Adopt strong restrictions in strategic technologies while preserving significant ordinary trade</p></div></div>
+</li><li class="pair">
+  <div class="ph"><span class="code qid">U22</span><span class="qt">NATO and American alliances</span></div>
+  <div class="ga"><div><span class="lab lg">Your guess</span><p>Strengthen US commitments and maintain a leading military role in defending allies</p></div>
+  <div><span class="lab la">Gene</span><p>Maintain strong alliances while requiring substantially greater allied defense contributions</p></div></div>
+</li><li class="pair">
+  <div class="ph"><span class="code qid">U24</span><span class="qt">Military aid and foreign conflicts</span></div>
+  <div class="ga"><div><span class="lab lg">Your guess</span><p>Use a different approach based on the circumstances of individual conflicts</p></div>
+  <div><span class="lab la">Gene</span><p>Provide meaningful assistance where it supports identifiable strategic interests and has a credible prospect of success</p></div></div>
+</li><li class="pair">
+  <div class="ph"><span class="code qid">P35</span><span class="qt">International security and military intervention</span></div>
+  <div class="ga"><div><span class="lab lg">Your guess</span><p>Provide limited assistance and prioritize diplomacy to minimize escalation</p></div>
+  <div><span class="lab la">Gene</span><p>Support the threatened democracy if the strategic outlook and expected consequences justify the risks</p></div></div>
+</li></ul></article>
+  </section>
+
+  <section class="s">
+    <h2>Where you were right</h2>
+    <ul class="right"><li><span class="code qid">P3</span> When individual freedom conflicts with collective welfare, which should generally take precedence?</li><li><span class="code qid">P4</span> How should society approach longstanding traditions and institutions?</li><li><span class="code qid">P5</span> Which statement best captures your conception of justice?</li><li><span class="code qid">P8</span> Individual liberty and paternalism</li><li><span class="code qid">P9</span> Democracy versus expertise</li><li><span class="code qid">P13</span> Cultural liberalism and social norms</li><li><span class="code qid">P22</span> Nationalism, patriotism, and political identity</li><li><span class="code qid">P25</span> Foreign policy: Liberal ideals versus strategic restraint</li><li><span class="code qid">P26</span> Markets, regulation, and the burden of proof</li><li><span class="code qid">P29</span> Capitalism and worker power</li><li><span class="code qid">U1</span> Federal taxation</li><li><span class="code qid">U7</span> Unauthorized immigration and enforcement</li><li><span class="code qid">U9</span> Criminal sentencing and incarceration</li><li><span class="code qid">U10</span> Drugs and addiction</li><li><span class="code qid">U12</span> Environmental review and infrastructure permitting</li><li><span class="code qid">U16</span> Abortion policy</li><li><span class="code qid">U21</span> Defense spending and military strategy</li></ul>
+  </section>
+
+  <section class="s">
+    <h2>Every answer</h2>
+    <div class="filters" role="group" aria-label="Filter answers">
+      <button id="f-all" data-f="all" aria-pressed="false">All 60</button>
+      <button id="f-miss" data-f="miss" aria-pressed="true">Misses</button>
+      <button id="f-hit" data-f="hit" aria-pressed="false">Matches</button>
+    </div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Question</th><th>Your guess</th><th>Gene's answer</th><th></th></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+    <p class="foot">Gene's own explanations appear under his answer where he gave one. Gene did not rate importance, so no ratings are shown.</p>
+  </section>
+</div>
+
+<script type="application/json" id="data">{"rows": [{"id": "P1", "title": "What is the primary purpose of government?", "guess": "Protect individual rights and freedoms", "actual": "A combination or different principle", "match": false, "why": "This is a challenging question that I dont think necessarily has a very simple answer. I start by thinking about it from a political theory lens. why do you need a government? not to go all hobbsian but I do think there is a significant concern of anarchy without a state and without a monopoly on the legitimate use of violence (I guess not to go all weber either). after you've cleared that very basic threshold, I think it becomes a lot murkier bc a lot of things that sound good in principle need to be traded off against one another and I feel like it's a facile perspective to just choose a single thing and say that is the only thing to optimize for. I'd say it's prob some combination of promoting collective welfare through building and maintaining strong and stable institutions (e.g. rule of law) while ensuring that individual rights and freedoms are respected. might seem like a bit of a cop out to choose a combo of what youre saying but in my view, it feels arbitrary to just pick one and say thats the main thing"}, {"id": "P2", "title": "How do you view economic inequality?", "guess": "Fundamentally unjust when people have very different living standards", "actual": "Acceptable, but excessive inequality threatens opportunity and society", "match": false, "why": "Oof. another tricky one. the one I choose is the closest I guess to what I think but that is itself kinda reductive bc then you have other questions like what is excessive and what do you then do about it? I'd say a few things:\n- I think some degree of inequality is structurally inherent if you want markets (given differences in natural endowments of ability and even things like desire to work hard)\n- I think some degree of inequality is even good as a means to reward and incentivize innovation and effort\n- however, there are 2 further issues that arrise: 1. what is the cause for the inequality in a society? 2. how much inequality are we seeing?\nto the former, I'd say that a lot of inequality we actually see is due to issues like inequality of opportunity, unequal access to resources, legacy of stuff like redlining. to the latter, I think this is a harder question. I take issue with some of the leftist views like all great wealth is inherently exploitative (I think thats absurd) and no billionaires should exist in a just society, however it does strike me as absurd that there are so many holes in the tax codes and structural inequalities through which the wealthy perpetuate their advantages. im not sure that you can necessarily say something like once you've hit X number you need to do Y thing (I think thats a clearly very blunt instrument) but I do think the urgency of the problem does depend on the extend of the inequality"}, {"id": "P3", "title": "When individual freedom conflicts with collective welfare, which should generally take precedence?", "guess": "Neither automatically; the circumstances determine the answer", "actual": "Neither automatically; the circumstances determine the answer", "match": true, "why": ""}, {"id": "P4", "title": "How should society approach longstanding traditions and institutions?", "guess": "Judge them on their merits, without presuming preservation or change", "actual": "Judge them on their merits, without presuming preservation or change", "match": true, "why": "depends on why youre asking. are you asking if I value tradition as a thing in and of itself or more as a functional and practical matter. I dont really care about tradition intrinsically. I think if something is broken/doesnt make sense you should fix it/change it. im not precious about the past in that way. however, pragmatically I think there are 2 major concerns with that kind of approach: 1. like james c scott says in seeing like a state, theres a huge danger in people thinking they know it all and can destroy and remake everything in a more rational and superior way. that kind of myopic hubris can be way worse than leaving things as they are. supporting radical change presupposes that the change will be good and there wont be any massive downstream negative consequence which we've seem time and time again is not the case 2. even if you presuppose that it's gonna be good, people and societies as a whole can have a negative reaction to just upturning the way things work. incrementalism is often more effective to counteract this.\n\nnow I dont wanna make blanket statements. if you see something thats genuinely super fucked up like slavery, then yeah fix it sure but generally, Im on the side of being careful and circumspect"}, {"id": "P5", "title": "Which statement best captures your conception of justice?", "guess": "Protecting equal rights and impartial treatment under the law", "actual": "Protecting equal rights and impartial treatment under the law", "match": true, "why": "I take issue with the premise behind these answers. its a single choice multiple choice which positions these as competing things. the choice I made is the closest to what I think but do generally believe in some vague kantian idea of giving people what theyre due as well and that structural disadvantages and inequalities should be corrected as well for example."}, {"id": "P6", "title": "Redistribution and taxation", "guess": "Yes, distributive justice is worth a meaningful efficiency cost", "actual": "Another approach or important distinction", "match": false, "why": "so I think generally when theres a tradeoff at play with a policy decision, as there very much is, I think the state should optimize for greatest cumulative welfare (while still doing so within the constraints of the law and of respecting individual rights). so with the way that youre framing it, if it's a modest reduction in investment in growth, if we can quantify how modest and see that the improvement in collective welfare is great in relation to that, then yeah Im for it. however, i dont believe in redistribution at all costs and totally ignoring deadweight loss and inefficiency. there is a real danger of killing the proverbial golden goose.\n\nI think there are 2 concerns here: 1. practical administration of policy 2. moral framework\nmy answer above is largely in response to 1. I do think that huge inequality is problematic in itself both bc it presents big political concerns (money in politics, oligarchy, etc) and bc it's hard to think of a moral justification for why we should have trillionaires when so many people live in desperate poverty"}, {"id": "P7", "title": "Markets versus government", "guess": "A mixed economy, with substantial public provision and regulation where warranted", "actual": "Markets should be the default, with government correcting identifiable failures", "match": false, "why": "Im a big believer in the power of markets. the power of competition, price discovery, and efficiency through the free market is very important and societally beneficial but I think it's a huge mistake to reify the market and treat it as a end onto itself. it should ultimately be constrained by the state where there are market failures and where there are dangers of distorting effects from monopolies\n\nI think Im sorta in between mixed economy and markets should be default. I think the chicago school and reagan types are too deferential towards the economy and insufficiently wary of the ways in which the market can fail but at the same time, I believe i the dynamism of markets - e.g. I think europe has too many stifling regulations which in turn have led to sclerotic growth and in turn have empowered populists and right wing movements who look for a scapegoat for this lack of growth. so I think theres not just a practical concern for recognizing how the market can be superior to the state but also a concern that a lack of growth and development can be very politically destabilizing too"}, {"id": "P8", "title": "Individual liberty and paternalism", "guess": "Possibly; the magnitude of the benefits and costs determines the answer", "actual": "Possibly; the magnitude of the benefits and costs determines the answer", "match": true, "why": "hmmm well the reason I say possibly is bc in principle i think competent adults should be able to do whatever they want even if it's bad for them but I can imagine scenarios in which the activity is so harmful that just saying that as a blanket statement prob goes too far. e.g. consider how addictive fentanyl is and how many people it kills. I would lean on the side of letting people make choices that might be harmful to them but I also wouldnt treat this as a moral absolute"}, {"id": "P9", "title": "Democracy versus expertise", "guess": "It depends on the institution's mandate, the evidence, and the seriousness of the harm", "actual": "It depends on the institution's mandate, the evidence, and the seriousness of the harm", "match": true, "why": "ugh this is another really tricky one. I think theres a lot of issues at play here.\n- the majority of the public is nowhere near educated, informed (or frankly intelligent) enough to be able to form meaningful opinions on complex issues. i think theres a very real concern of demagogues exploiting that - rail against the corrupt, unaccountable elites, push a bunch of stuff that sounds nice that will wreck the countries finances/long term well being\n- at the same time, I do think there is danger in an idea of a class of people who paternalistically treat the who country as a bunch of morons who dont know enough to make their own choices (and I think we saw aspects of this with stuff like the iraq war or GFC for example - theres a reason why there has been a big backlash to technocratic rule and the idea that theres a few experts who are smart enough to run everything). I worry about that from both a moral standpoint (feels deeply undemocratic to just override whatever the public wants) and from a practical standpoint (going back to the seeing like a state thing - danger of the hubris of experts).\n- i dont really have a good answer ultimately bc I think these are 2 countervailing but both very real things. I guess I'd just say that politically theres more danger in an unaccountable elite overriding the public will and then getting things wrong and delegitimizing the state as we've seen in recent times. but on the whole I def believe in expert knowledge and think things like fed independence is good - you need people like economists and domain experts who can act as stewards for the public good"}, {"id": "P10", "title": "Equality of opportunity versus equality of outcomes", "guess": "Persistent group disparities justify interventions specifically designed to reduce those gaps", "actual": "Actively reduce extreme disparities in outcomes through redistribution and structural reform", "match": false, "why": "so I want to qualify what Im saying what Im saying here. I def dont believe in communism or state enforced mass equality but going back to one of my earlier points, inasmuch as the state should be concerned with collective welfare, I think its good to reduce disparities in outcome if it will raise collective welfare. I see it as a sort of technocratic/optimization problem: how do we ensure the greatest good for the greatest number"}, {"id": "P11", "title": "Are individual rights inviolable?", "guess": "Probably not, although sufficiently catastrophic consequences could justify exceptions.", "actual": "No. Certain rights should not be violated, even to maximize welfare.", "match": false, "why": "yeah this is a good illustration of what I mean when I say that I think we should generally maximize welfare but subject to the constraints of a rule based order and individual rights. first I kind reject the premise that you can violate rights without creating an institutional precedent, but even if I grant you that, I think individual rights override a general util max framework"}, {"id": "P12", "title": "Whose welfare matters most?", "guess": "Policy A. Improving the position of the worst-off deserves special priority.", "actual": "Probably A, depending on the size of the overall welfare loss.", "match": false, "why": "what does welfare mean here? the construction of your question leads me to think youre measuring this in the form of wealth or whatever. for a problem like this I wouldnt think about welfare in those terms. I think about it in terms of human flourishing (which I know is kinda squishy but bear with me) and diminishing marginal returns is very real. if you have a policy that would take $10k from a middle class person but net Bezos $10B Im not sure thats a good idea bc the value of an incremental 10b to bezos is basically nothing, for example. so I kinda take issue with the way you frame the question. i feel like for such a scenario to even exist youre prob messing up your util calc"}, {"id": "P13", "title": "Cultural liberalism and social norms", "guess": "Strongly protect the minority's freedom and reject state enforcement of conventional morality.", "actual": "Strongly protect the minority's freedom and reject state enforcement of conventional morality.", "match": true, "why": "tbh if its not enshrined in laws I dont think the state should care about \"norms\". either youre violating the laws in which case yeah enforce them or youre not and leave them alone, or change the laws through democratic process and then enforce"}, {"id": "P14", "title": "Group disadvantage and individual fairness", "guess": "Support the preference; reducing structural disadvantage can justify unequal individual treatment.", "actual": "Oppose differential treatment based on group identity; equal individual treatment is paramount.", "match": false, "why": "pretty clearly talking about affirmative action here. there are 2 dimensions of how to answer this:\n1. as a practical concern: pushing people in through a backdoor who are underqualified seems like youre setting them up for failure in a lot of cases and even if you arent, you undermine peoples faith in the fairness of institutions\n2. as a moral concern: I understand wanting to correct structural disadvantage but I think you do that upstream with other forms of economic redistribution and earlier childhood education. feels unfair to deny more qualified people spots at this stage"}, {"id": "P15", "title": "Immigration, national obligations, and universal welfare", "guess": "Favor substantial immigration but give additional weight to domestic adjustment costs and political sustainability.", "actual": "Favor moderate immigration, prioritizing citizens' interests while recognizing benefits to migrants.", "match": false, "why": "as with most questions I think there is both a practical and moral dimension this:\n\nmorally: I dont think an american life is worth more than a life from another country. morally it feels kinda suspect to slam the doors shut. that said to the extent that the state exists in a social contract with its citizens, its primary obligations are to them. so I guess lean towards liberalization while being careful to optimize towards citizen wellbeing\n\npractically: letting the doors open to immigrants is terrible policy. people hate it and it opens up questions of fairness (why implicitly reward people for not following the proper processes) and can undermine social cohesion. immigration is good for the economy and society but should be done in a controlled and orderly way"}, {"id": "P16", "title": "Do you give special moral weight to the worst-off?", "guess": "No. Equal gains in actual well-being have equal moral value, regardless of who receives them.", "actual": "Yes. An equal benefit matters morally more when it goes to someone worse off.", "match": false, "why": ""}, {"id": "P17", "title": "What makes a right fundamental?", "guess": "There is no single foundation; several moral considerations justify rights.", "actual": "Human dignity and autonomy: people must not be treated merely as instruments.", "match": false, "why": ""}, {"id": "P18", "title": "Can economic liberty be restricted for social welfare?", "guess": "No. Property rights matter, but ordinary taxation is not comparable to violating fundamental civil liberties.", "actual": "There is a meaningful rights concern, but it can be outweighed by sufficiently strong public interests.", "match": false, "why": "I guess I\u2019ll start by saying I find the conventional account of property rights a little odd. That there exists objects in the world to which you and you alone are solely morally and therefore legally entitled. I dont like the idea of a state or some institution being able to reach in and take from people but I think philosophically that bothers me not bc I believe there is some sanctity to the ownership of stuff but rather I think there can be some violation of human dignity and autonomy. Like for example I find the idea that a person can buy a shit ton of land and kick everyone off of it kinda weird and not sure that there is a fully morally coherent justification, particularly when this land\u2019s ownership is passed down through generations of inherited wealth.\n\nSo I care about property rights morally in as much as I think that a state that doesnt will overreach and shows that it does not respect the agency and autonomy of people. Practically too, if you can you arbitrarily take things from people, it undermines your political legitimacy and undermines peoples incentive to build and work.\n\nAll that said while I dont think the state should just arbitrarily take stuff from people, I also dont think there is some reified sanctity to the idea of owning stuff that intrinsically overrides the welfare of society as a whole"}, {"id": "P19", "title": "Democratic legitimacy versus constitutional rights", "guess": "Only if the constitutional text clearly and unambiguously forbids the restriction.", "actual": "Absolutely. Fundamental rights constrain even overwhelming democratic majorities.", "match": false, "why": ""}, {"id": "P20", "title": "Universal moral worth versus obligations to citizens", "guess": "I would distinguish the obligations or funding sources differently.", "actual": "Probably B, but governments may legitimately place some additional weight on citizens.", "match": false, "why": ""}, {"id": "P21", "title": "Judicial power and democratic accountability", "guess": "Judicial review should be narrow; elected institutions deserve substantial deference", "actual": "Strong judicial review, including robust protection of rights against majorities", "match": false, "why": "principled objections and desires to preserve rights and liberties enshrined in the constitution im for strong judicial review. There is a real concern of tyranny of the masses. That said you cant just take principled objections for granted"}, {"id": "P22", "title": "Nationalism, patriotism, and political identity", "guess": "Shared constitutional principles, civic equality, and democratic institutions are sufficient", "actual": "Shared constitutional principles, civic equality, and democratic institutions are sufficient", "match": true, "why": "Your use of the word should implies a normative judgement. In that case yeah I think institutions and a belief in democratic and institutional values should be sufficient for national identity. Though I recognize in practice, shared traditions and symbols are also important for social cohesion. I also dont think national identity is itself a moral good but rather something of instrumental value for a functioning society. The reason I didnt go with the last option is the use of the word \u201ccan\u201d which implies practical application. I dont think people in practice are willing to cooperate purely on the basis of abstract philosophical and political commitments"}, {"id": "P23", "title": "The welfare state and positive rights", "guess": "Government should ensure basic opportunities and a safety net, while relying substantially on markets", "actual": "Public provision should depend mainly on evidence of welfare gains, rather than an independent entitlement", "match": false, "why": ""}, {"id": "P24", "title": "Religion, pluralism, and public institutions", "guess": "Broad accommodation for adults, but stronger common standards for institutions educating children", "actual": "Religious freedom deserves protection, but all public-facing institutions should meet robust secular equality standards", "match": false, "why": ""}, {"id": "P25", "title": "Foreign policy: Liberal ideals versus strategic restraint", "guess": "Favor diplomatic engagement and targeted measures; avoid broad confrontations without clear prospects for improvement", "actual": "Favor diplomatic engagement and targeted measures; avoid broad confrontations without clear prospects for improvement", "match": true, "why": ""}, {"id": "P26", "title": "Markets, regulation, and the burden of proof", "guess": "Neither side deserves a presumption; assess expected benefits, harms, and uncertainty symmetrically", "actual": "Neither side deserves a presumption; assess expected benefits, harms, and uncertainty symmetrically", "match": true, "why": ""}, {"id": "P27", "title": "Concentrated private power", "guess": "Generally defer to voluntary market arrangements and property rights", "actual": "Intervene selectively, including through competition policy and safeguards against arbitrary exclusion", "match": false, "why": "Practically speaking government officials are poorly positioned to understand technology much less the 2nd order or other downstream effects of regulation which is often a blunt instrument. I think the gov needs to be willing to intervene in certain cases but should be circumspect when and how it chooses to do so, particularly when often times the changing nature of the market and technology solves the problem anyway (consider for example that many of the most powerful companies in the world in the 90s are shadows of themselves or defunct today)"}, {"id": "P28", "title": "Free speech and harmful expression", "guess": "Possibly, if sufficiently compelling evidence establishes substantial societal harm", "actual": "No; political expression should remain protected even when deeply harmful or offensive", "match": false, "why": ""}, {"id": "P29", "title": "Capitalism and worker power", "guess": "Maintain private enterprise, with targeted measures promoting competition and worker mobility", "actual": "Maintain private enterprise, with targeted measures promoting competition and worker mobility", "match": true, "why": "I might be in favor of the 2nd one but it depends on what strengthening unions and bargaining rights and all of that actually entails. Like I said before I think regulation is often a blunt instrument and I think often the gov messes it up"}, {"id": "P30", "title": "Public order versus civil liberties", "guess": "Strong protest rights, tolerating substantial disruption unless violence or direct threats occur", "actual": "Protect protest rights while using narrow, content-neutral restrictions on severe disruption", "match": false, "why": ""}, {"id": "P31", "title": "Healthcare and the welfare state", "guess": "Universal public insurance if evidence shows it performs better, but without an intrinsic preference for public provision", "actual": "Universal public insurance, because comprehensive access and risk pooling justify the institutional change", "match": false, "why": "Healthcare is a great example of market failure - huge consolidations in the value chain has led to massive conglomerates and regulatory capture has led to results that are incommensurate with the massive costs. having a monopsony with a buyer that has the power to create more transparency and better pricing sounds like a way better move"}, {"id": "P32", "title": "Housing, local democracy, and property rights", "guess": "Substantially liberalize construction while retaining limited local safeguards", "actual": "Override restrictive local zoning and allow substantial construction, even against homeowners' preferences", "match": false, "why": "Housing is a huge issue for the economy. Massively contributing to the affordability crisis. Just leaving things to local control is just ceding the issue to NIMBYs which is why we\u2019re in this mess to begin with. Im def a YIMBY"}, {"id": "P33", "title": "Climate change and economic growth", "guess": "Prioritize affordable energy and growth, relying predominantly on innovation rather than restrictive climate policy", "actual": "A strong carbon-pricing framework combined with targeted public investment and carefully justified regulation", "match": false, "why": ""}, {"id": "P34", "title": "Crime, punishment, and the rule of law", "guess": "Emphasize rehabilitation, prevention, and reducing incarceration while strictly protecting defendants' rights", "actual": "Prioritize punishment and public order, accepting some additional restrictions to reduce crime", "match": false, "why": "I think dems have been too soft on crime. At the very least you need to enforce the laws on the books and not tolerate public disorder and lawlessness. It\u2019s a recipe for undermining social trust. Dont go the other way though and just blindly support the police and law enforcement. They have been hot beds of iniquity, corruption, and unaccountability. You need a competent and fair administration of justice. Reform law enforcement, dont be needlessly cruel but create law and order"}, {"id": "P35", "title": "International security and military intervention", "guess": "Provide limited assistance and prioritize diplomacy to minimize escalation", "actual": "Support the threatened democracy if the strategic outlook and expected consequences justify the risks", "match": false, "why": "I think morally it\u2019s good to support democracies against authoritarian aggression but practically foreign entanglements are a mess and have a ton of unintended consequences and just sap your political capital. It\u2019s often the case that it\u2019s just smarter to spend your chips elsewhere and avoid potential quagmires. A clear example of where what I think is morally good diverges from what I think is best policy"}, {"id": "U1", "title": "Federal taxation", "guess": "Moderately increase taxes on high earners and capital income, while preserving incentives for investment", "actual": "Moderately increase taxes on high earners and capital income, while preserving incentives for investment", "match": true, "why": ""}, {"id": "U2", "title": "Federal spending and deficits", "guess": "Prioritize growth-enhancing structural reforms over near-term deficit targets", "actual": "Make deficit reduction a central priority through meaningful spending reforms and some revenue measures", "match": false, "why": ""}, {"id": "U3", "title": "Minimum wage and labor markets", "guess": "Keep the federal floor relatively modest and leave most increases to states and cities", "actual": "Use an alternative such as wage subsidies or expanded earned-income tax credits as the main instrument", "match": false, "why": ""}, {"id": "U4", "title": "Business regulation and competition", "guess": "Substantially deregulate and rely more on market competition to discipline firms", "actual": "Strengthen antitrust enforcement while simplifying unnecessarily burdensome regulations", "match": false, "why": ""}, {"id": "U5", "title": "Healthcare system", "guess": "A universal public option with automatic or near-universal coverage while retaining private insurers", "actual": "Single-payer national insurance replacing most private primary insurance", "match": false, "why": ""}, {"id": "U6", "title": "Legal immigration levels", "guess": "Keep overall admissions roughly stable, while changing the mix of categories", "actual": "Increase moderately, particularly through employment-based immigration", "match": false, "why": ""}, {"id": "U7", "title": "Unauthorized immigration and enforcement", "guess": "A conditional path to legal status for established residents, alongside strong border enforcement and immigration-system reform", "actual": "A conditional path to legal status for established residents, alongside strong border enforcement and immigration-system reform", "match": true, "why": ""}, {"id": "U8", "title": "Policing and public disorder", "guess": "Focus primarily on prevention, social services, and alternatives to arrest for low-level offenses", "actual": "Consistently enforce both minor and serious offenses, with proportionate sanctions, accountable policing, and diversion where effective", "match": false, "why": ""}, {"id": "U9", "title": "Criminal sentencing and incarceration", "guess": "Reduce incarceration for nonviolent offenses while maintaining strong penalties for serious violent crime", "actual": "Reduce incarceration for nonviolent offenses while maintaining strong penalties for serious violent crime", "match": true, "why": ""}, {"id": "U10", "title": "Drugs and addiction", "guess": "Legalize and regulate most drugs, including hard drugs, with strong treatment and harm-reduction services", "actual": "Legalize and regulate most drugs, including hard drugs, with strong treatment and harm-reduction services", "match": true, "why": ""}, {"id": "U11", "title": "Energy and electricity production", "guess": "Expand nuclear, renewables, transmission, and storage while gradually reducing fossil-fuel dependence", "actual": "Pursue energy abundance across nuclear, renewables, and fossil fuels, with broad permitting reform", "match": false, "why": ""}, {"id": "U12", "title": "Environmental review and infrastructure permitting", "guess": "Substantially streamline permitting and limit procedural opportunities to block projects", "actual": "Substantially streamline permitting and limit procedural opportunities to block projects", "match": true, "why": ""}, {"id": "U13", "title": "K\u201312 education and school choice", "guess": "Restrict private vouchers and charter expansion, concentrating resources in district public schools", "actual": "Use another approach, particularly for funding or school governance", "match": false, "why": "Im not sufficiently versed on the literature on charter school and voucher outcomes to have a strong view but generally I think all of education starts with determining how to quantify and measure leaning effectively and rigorously measuring and optimizing towards that and making corrections and adjustments accordingly (e.g. fire bad teachers quickly, pay and recognize good teachers more, etc)"}, {"id": "U14", "title": "College affordability and student loans", "guess": "Expand targeted grants while limiting excessive borrowing and holding institutions accountable for cost and outcomes", "actual": "Reduce federal lending and subsidies significantly, relying more on institutional competition and private financing", "match": false, "why": ""}, {"id": "U15", "title": "Industrial policy and domestic manufacturing", "guess": "Focus on research, infrastructure, skilled immigration, and competitiveness rather than firm-specific subsidies", "actual": "Use targeted subsidies and public investment for genuinely strategic sectors, with performance requirements", "match": false, "why": ""}, {"id": "U16", "title": "Abortion policy", "guess": "Protect abortion access nationally throughout pregnancy, subject to medical regulation", "actual": "Protect abortion access nationally throughout pregnancy, subject to medical regulation", "match": true, "why": ""}, {"id": "U17", "title": "Transgender rights and public policy", "guess": "Protect adults against discrimination, while applying evidence-based, context-specific rules for minors and sex-separated settings", "actual": "Strong federal protections for gender identity, with generally broad access and inclusion", "match": false, "why": ""}, {"id": "U18", "title": "Voting and election administration", "guess": "Expand automatic registration, mail voting, and early voting while minimizing identification requirements", "actual": "Make voting broadly accessible, with standardized identification and safeguards against administrative error", "match": false, "why": ""}, {"id": "U19", "title": "Federal bureaucracy and civil-service reform", "guess": "Make it substantially easier to dismiss underperforming federal employees, restructure agencies, and tie advancement to measurable results", "actual": "Strengthen performance evaluation and management while preserving meaningful protections against politicization", "match": false, "why": ""}, {"id": "U20", "title": "Social Security and Medicare fiscal reform", "guess": "Increase taxes on high earners and capital income to preserve or expand existing benefits", "actual": "Prioritize slowing benefit growth, means-testing, and adjusting retirement eligibility while protecting poorer recipients", "match": false, "why": "Tbh social security and medicare is a tricky one. I think it\u2019s important to protect impoverished elderly people but the economics of this system are kinda out of whack. As society ages and birth rates decline, it\u2019s gonna become increasingly uneconomical (you can see this in other countries with fights over fiscal austerity in relation to budgetary concerns). To the extent that I worry about the practical dimensions of this, I think pragmatically you gotta eventually phase out at least some of these benefits"}, {"id": "U21", "title": "Defense spending and military strategy", "guess": "Restructure the military around a narrower set of strategic threats while reducing less essential global commitments", "actual": "Restructure the military around a narrower set of strategic threats while reducing less essential global commitments", "match": true, "why": ""}, {"id": "U22", "title": "NATO and American alliances", "guess": "Strengthen US commitments and maintain a leading military role in defending allies", "actual": "Maintain strong alliances while requiring substantially greater allied defense contributions", "match": false, "why": ""}, {"id": "U23", "title": "China, trade, and economic security", "guess": "Use narrowly targeted national-security controls while generally favoring expanded trade and economic engagement", "actual": "Adopt strong restrictions in strategic technologies while preserving significant ordinary trade", "match": false, "why": "China is by far the biggest geopolitical threat the us faces. It\u2019s of paramount importance that we treat them accordingly in our alliances, military investments and economic investments and policies. But dont just start stupid trade wars. You dont need to totally suspend trade"}, {"id": "U24", "title": "Military aid and foreign conflicts", "guess": "Use a different approach based on the circumstances of individual conflicts", "actual": "Provide meaningful assistance where it supports identifiable strategic interests and has a credible prospect of success", "match": false, "why": ""}, {"id": "U25", "title": "National security and domestic surveillance", "guess": "Permit narrowly targeted expansions where agencies can demonstrate specific operational needs", "actual": "Substantially restrict existing surveillance authorities and require individualized warrants for more activities", "match": false, "why": ""}], "axes": [{"id": "econ", "name": "Economic policy", "low": "State-led, egalitarian", "high": "Market-led", "g": -0.2, "a": -0.34}, {"id": "social", "name": "Social policy", "low": "Progressive", "high": "Traditional", "g": -1.25, "a": -1.0}, {"id": "liberty", "name": "Civil liberties", "low": "Order and security first", "high": "Civil liberties first", "g": 0.92, "a": 0.82}, {"id": "constraint", "name": "Political authority", "low": "Majority rule", "high": "Constraints on majorities", "g": -0.33, "a": 1.25}, {"id": "fiscal", "name": "Fiscal orientation", "low": "Spend and invest", "high": "Fiscal restraint", "g": -1.25, "a": 1.33}, {"id": "foreign", "name": "Foreign affairs", "low": "Restraint", "high": "Active engagement", "g": -0.25, "a": 0.2}, {"id": "national", "name": "Whose welfare counts", "low": "Global, cosmopolitan", "high": "Citizens first", "g": -0.7, "a": -0.25}]}</script>
+<script>
+(function () {
+  var D = JSON.parse(document.getElementById('data').textContent);
+  var pct = function (v) { return ((v + 2) / 4 * 100) + '%'; };
+  var fmt = function (v) { return (v > 0 ? '+' : '') + v.toFixed(2); };
+  var esc = function (s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; };
+
+  var chart = document.getElementById('chart');
+  var html = '';
+  D.axes.forEach(function (a) {
+    var gap = Math.abs(a.a - a.g);
+    var lo = Math.min(a.a, a.g), hi = Math.max(a.a, a.g);
+    var ticks = [-2, -1, 0, 1, 2].map(function (t) {
+      return '<span class="tick' + (t === 0 ? ' zero' : '') + '" style="left:' + pct(t) + '"></span>';
+    }).join('');
+    html += '<div class="arow">' +
+      '<div class="ahead"><b>' + esc(a.name) + '</b><span class="gap' + (gap >= 1 ? ' big' : '') + '">guess ' + fmt(a.g) + ' · Gene ' + fmt(a.a) + ' · gap ' + gap.toFixed(2) + '</span></div>' +
+      '<div class="plot"><span class="base"></span>' + ticks +
+      '<span class="span" style="left:' + pct(lo) + ';width:calc(' + pct(hi) + ' - ' + pct(lo) + ')"></span>' +
+      '<button class="dot g" style="left:' + pct(a.g) + '" data-tip="Your guess: ' + esc(a.name) + ' ' + fmt(a.g) + '" aria-label="Your guess, ' + esc(a.name) + ', ' + fmt(a.g) + '"><i></i></button>' +
+      '<button class="dot a" style="left:' + pct(a.a) + '" data-tip="Gene: ' + esc(a.name) + ' ' + fmt(a.a) + '" aria-label="Gene, ' + esc(a.name) + ', ' + fmt(a.a) + '"><i></i></button>' +
+      '</div>' +
+      '<div class="ends"><span>' + esc(a.low) + '</span><span>' + esc(a.high) + '</span></div>' +
+      '</div>';
+  });
+  html += '<div class="scale">' + [-2, -1, 0, 1, 2].map(function (t) {
+    return '<span style="left:' + pct(t) + '">' + (t > 0 ? '+' + t : t) + '</span>';
+  }).join('') + '</div>';
+  chart.innerHTML = html;
+
+  var tip = document.createElement('div');
+  tip.className = 'tip'; tip.hidden = true; chart.appendChild(tip);
+  function show(el) {
+    var r = el.getBoundingClientRect(), c = chart.getBoundingClientRect();
+    tip.textContent = el.getAttribute('data-tip');
+    tip.style.left = (r.left + r.width / 2 - c.left) + 'px';
+    tip.style.top = (r.top - c.top - 4) + 'px';
+    tip.hidden = false;
+  }
+  chart.querySelectorAll('.dot').forEach(function (el) {
+    el.addEventListener('mouseenter', function () { show(el); });
+    el.addEventListener('focus', function () { show(el); });
+    el.addEventListener('mouseleave', function () { tip.hidden = true; });
+    el.addEventListener('blur', function () { tip.hidden = true; });
+  });
+
+  var tbody = document.getElementById('tbody');
+  function render(f) {
+    tbody.innerHTML = D.rows.filter(function (r) {
+      return f === 'all' || (f === 'miss' && !r.match) || (f === 'hit' && r.match);
+    }).map(function (r) {
+      return '<tr><td><span class="code qid">' + r.id + '</span> ' + esc(r.title) + '</td>' +
+        '<td>' + esc(r.guess) + '</td>' +
+        '<td>' + esc(r.actual) + (r.why ? '<p class="why">"' + esc(r.why) + '"</p>' : '') + '</td>' +
+        '<td><span class="pill ' + (r.match ? 'y">Match' : 'n">Miss') + '</span></td></tr>';
+    }).join('');
+    document.querySelectorAll('.filters button').forEach(function (b) {
+      b.setAttribute('aria-pressed', b.getAttribute('data-f') === f ? 'true' : 'false');
+    });
+    try { localStorage.setItem('gene-guess-filter', f); } catch (e) {}
+  }
+  document.querySelectorAll('.filters button').forEach(function (b) {
+    b.addEventListener('click', function () { render(b.getAttribute('data-f')); });
+  });
+  var start = 'miss';
+  try { start = localStorage.getItem('gene-guess-filter') || 'miss'; } catch (e) {}
+  render(start);
+})();
+</script>
+</body></html>
