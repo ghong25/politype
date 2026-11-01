@@ -124,6 +124,14 @@ td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
 td .why { margin-top: 6px; font-family: var(--font-q); font-style: italic; color: var(--muted); max-width: 60ch; }
 .foot { font-size: 13px; color: var(--muted); max-width: 65ch; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+details.more > summary, details.whyx > summary { cursor: pointer; list-style: none; font-size: 13.5px; color: var(--muted); display: inline-flex; gap: 6px; align-items: center; }
+details.more > summary::-webkit-details-marker, details.whyx > summary::-webkit-details-marker { display: none; }
+details.more > summary::before, details.whyx > summary::before { content: "+"; font-family: var(--font-code); }
+details.more[open] > summary::before, details.whyx[open] > summary::before { content: "−"; }
+details.more[open] > summary { margin-bottom: 12px; }
+details.whyx { margin-top: 6px; }
+details.whyx > summary { font-size: 12.5px; }
 </style>
 
 <div class="wrap">
@@ -147,7 +155,7 @@ td .why { margin-top: 6px; font-family: var(--font-q); font-style: italic; color
   <section class="s">
     <h2>Where you missed</h2>
     <p class="intro">Your misses group into five patterns. Each shows the questions behind it.</p>
-    <article class="pat"><h3>Immigration and citizens first</h3><p class="lede">This was your biggest miss. All four questions are ones she rated 5 out of 5. You guessed moderate answers. She picked the strongest citizens-first options on every one.</p><ul class="pairs"><li class="pair">
+    <article class="pat"><h3>Immigration and citizens first</h3><p class="lede">This was your biggest miss. All four questions are ones she rated 5 out of 5. You guessed moderate answers. She picked the strongest citizens-first options on every one.</p><details class="more"><summary>Show the 4 questions</summary><ul class="pairs"><li class="pair">
   <div class="ph"><span class="code qid">U6</span><span class="qt">Legal immigration levels</span><span class="imp">5/5</span></div>
   <div class="ga"><div><span class="lab lg">Your guess</span><p>Increase moderately, particularly through employment-based immigration</p></div>
   <div><span class="lab la">Julia</span><p>Reduce overall legal immigration, prioritizing applicants with high economic contributions</p></div></div>
@@ -163,8 +171,8 @@ td .why { margin-top: 6px; font-family: var(--font-q); font-style: italic; color
   <div class="ph"><span class="code qid">P20</span><span class="qt">Universal moral worth versus obligations to citizens</span><span class="imp">5/5</span></div>
   <div class="ga"><div><span class="lab lg">Your guess</span><p>Probably B, but governments may legitimately place some additional weight on citizens.</p></div>
   <div><span class="lab la">Julia</span><p>A. The public resources of a country should primarily benefit its own citizens.</p></div></div>
-</li></ul></article>
-<article class="pat"><h3>Foreign policy</h3><p class="lede">You guessed she would favor restraint. She wants a large military and would back a threatened democracy. China is the one place you guessed too hawkish: she keeps ordinary trade.</p><ul class="pairs"><li class="pair">
+</li></ul></details></article>
+<article class="pat"><h3>Foreign policy</h3><p class="lede">You guessed she would favor restraint. She wants a large military and would back a threatened democracy. China is the one place you guessed too hawkish: she keeps ordinary trade.</p><details class="more"><summary>Show the 4 questions</summary><ul class="pairs"><li class="pair">
   <div class="ph"><span class="code qid">U21</span><span class="qt">Defense spending and military strategy</span><span class="imp">4/5</span></div>
   <div class="ga"><div><span class="lab lg">Your guess</span><p>Substantially reduce defense spending and the US military presence overseas</p></div>
   <div><span class="lab la">Julia</span><p>Maintain a large, globally capable military, with selective modernization and efficiency reforms</p></div></div>
@@ -180,8 +188,8 @@ td .why { margin-top: 6px; font-family: var(--font-q); font-style: italic; color
   <div class="ph"><span class="code qid">U23</span><span class="qt">China, trade, and economic security</span><span class="imp">5/5</span></div>
   <div class="ga"><div><span class="lab lg">Your guess</span><p>Pursue extensive economic decoupling, tariffs, and restrictions to reduce dependence</p></div>
   <div><span class="lab la">Julia</span><p>Adopt strong restrictions in strategic technologies while preserving significant ordinary trade</p></div></div>
-</li></ul></article>
-<article class="pat"><h3>Order and tradition</h3><p class="lede">You guessed a stricter traditionalist than she is. She would reform traditions gradually, weigh protest rights equally with public order, and legalize cannabis. You did get her toughest positions on policing (U8) and sentencing (U9) right.</p><ul class="pairs"><li class="pair">
+</li></ul></details></article>
+<article class="pat"><h3>Order and tradition</h3><p class="lede">You guessed a stricter traditionalist than she is. She would reform traditions gradually, weigh protest rights equally with public order, and legalize cannabis. You did get her toughest positions on policing (U8) and sentencing (U9) right.</p><details class="more"><summary>Show the 5 questions</summary><ul class="pairs"><li class="pair">
   <div class="ph"><span class="code qid">P1</span><span class="qt">What is the primary purpose of government?</span><span class="imp">5/5</span></div>
   <div class="ga"><div><span class="lab lg">Your guess</span><p>Preserve social order, stability, and institutions</p></div>
   <div><span class="lab la">Julia</span><p>A combination or different principle</p></div></div>
@@ -201,8 +209,8 @@ td .why { margin-top: 6px; font-family: var(--font-q); font-style: italic; color
   <div class="ph"><span class="code qid">U10</span><span class="qt">Drugs and addiction</span><span class="imp">3/5</span></div>
   <div class="ga"><div><span class="lab lg">Your guess</span><p>Retain broad prohibitions and strengthen enforcement against possession and distribution of dangerous drugs</p></div>
   <div><span class="lab la">Julia</span><p>Legalize cannabis, expand treatment and harm reduction, but retain criminal penalties for possession of the most dangerous drugs</p></div></div>
-</li></ul></article>
-<article class="pat"><h3>Economics, in both directions</h3><p class="lede">Your misses here went both ways, so her economic score looks close to your guess even though many answers differ. She is more pro-market than you guessed on business, wages, and the civil service. She is more pro-government on schools and Social Security.</p><ul class="pairs"><li class="pair">
+</li></ul></details></article>
+<article class="pat"><h3>Economics, in both directions</h3><p class="lede">Your misses here went both ways, so her economic score looks close to your guess even though many answers differ. She is more pro-market than you guessed on business, wages, and the civil service. She is more pro-government on schools and Social Security.</p><details class="more"><summary>Show the 6 questions</summary><ul class="pairs"><li class="pair">
   <div class="ph"><span class="code qid">P27</span><span class="qt">Concentrated private power</span><span class="imp">4/5</span></div>
   <div class="ga"><div><span class="lab lg">Your guess</span><p>Intervene aggressively; concentrated private power can undermine liberty even without conventional market failures</p></div>
   <div><span class="lab la">Julia</span><p>Intervene only where demonstrable consumer harm or identifiable market failures exist</p></div></div>
@@ -226,8 +234,8 @@ td .why { margin-top: 6px; font-family: var(--font-q); font-style: italic; color
   <div class="ph"><span class="code qid">U20</span><span class="qt">Social Security and Medicare fiscal reform</span><span class="imp">4/5</span></div>
   <div class="ga"><div><span class="lab lg">Your guess</span><p>Prioritize slowing benefit growth, means-testing, and adjusting retirement eligibility while protecting poorer recipients</p></div>
   <div><span class="lab la">Julia</span><p>Combine additional revenue with gradual adjustments to benefits, eligibility, or payment systems</p></div></div>
-</li></ul></article>
-<article class="pat"><h3>When she hedges</h3><p class="lede">She took a firm side where you expected a hedge, and said &quot;it depends&quot; where you expected a firm answer.</p><ul class="pairs"><li class="pair">
+</li></ul></details></article>
+<article class="pat"><h3>When she hedges</h3><p class="lede">She took a firm side where you expected a hedge, and said &quot;it depends&quot; where you expected a firm answer.</p><details class="more"><summary>Show the 3 questions</summary><ul class="pairs"><li class="pair">
   <div class="ph"><span class="code qid">P12</span><span class="qt">Whose welfare matters most?</span><span class="imp">4/5</span></div>
   <div class="ga"><div><span class="lab lg">Your guess</span><p>Probably B, depending on the relative welfare gains.</p></div>
   <div><span class="lab la">Julia</span><p>Policy B. Higher aggregate welfare is the decisive consideration here.</p></div></div>
@@ -239,7 +247,7 @@ td .why { margin-top: 6px; font-family: var(--font-q); font-style: italic; color
   <div class="ph"><span class="code qid">P26</span><span class="qt">Markets, regulation, and the burden of proof</span><span class="imp">2/5</span></div>
   <div class="ga"><div><span class="lab lg">Your guess</span><p>Generally on regulators, though credible evidence of serious harm can justify precaution</p></div>
   <div><span class="lab la">Julia</span><p>Neither side deserves a presumption; assess expected benefits, harms, and uncertainty symmetrically</p></div></div>
-</li></ul></article>
+</li></ul></details></article>
   </section>
 
   <section class="s">
@@ -320,7 +328,7 @@ td .why { margin-top: 6px; font-family: var(--font-q); font-style: italic; color
       return '<tr><td><span class="code qid">' + r.id + '</span> ' + esc(r.title) + '</td>' +
         '<td class="num">' + (r.imp ? r.imp + '/5' : '<span class="muted">none</span>') + '</td>' +
         '<td>' + esc(r.guess) + '</td>' +
-        '<td>' + esc(r.actual) + (r.why ? '<p class="why">"' + esc(r.why) + '"</p>' : '') + '</td>' +
+        '<td>' + esc(r.actual) + (r.why ? '<details class="whyx"><summary>Explanation</summary><p class="why">"' + esc(r.why) + '"</p></details>' : '') + '</td>' +
         '<td><span class="pill ' + (r.match ? 'y">Match' : 'n">Miss') + '</span></td></tr>';
     }).join('');
     document.querySelectorAll('.filters button').forEach(function (b) {

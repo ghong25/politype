@@ -124,6 +124,14 @@ td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
 td .why { margin-top: 6px; font-family: var(--font-q); font-style: italic; color: var(--muted); max-width: 60ch; }
 .foot { font-size: 13px; color: var(--muted); max-width: 65ch; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+details.more > summary, details.whyx > summary { cursor: pointer; list-style: none; font-size: 13.5px; color: var(--muted); display: inline-flex; gap: 6px; align-items: center; }
+details.more > summary::-webkit-details-marker, details.whyx > summary::-webkit-details-marker { display: none; }
+details.more > summary::before, details.whyx > summary::before { content: "+"; font-family: var(--font-code); }
+details.more[open] > summary::before, details.whyx[open] > summary::before { content: "−"; }
+details.more[open] > summary { margin-bottom: 12px; }
+details.whyx { margin-top: 6px; }
+details.whyx > summary { font-size: 12.5px; }
 </style>
 
 <div class="wrap">
@@ -147,7 +155,7 @@ td .why { margin-top: 6px; font-family: var(--font-q); font-style: italic; color
   <section class="s">
     <h2>Where you missed</h2>
     <p class="intro">Your misses group into six patterns. Each shows the questions behind it.</p>
-    <article class="pat"><h3>Deficits and entitlements</h3><p class="lede">This was your biggest miss by topic score. You guessed he would spend to preserve programs. He makes deficit reduction a central priority and would slow Social Security and Medicare benefit growth. You did get his tax position right: moderately higher taxes on high earners (U1).</p><ul class="pairs"><li class="pair">
+    <article class="pat"><h3>Deficits and entitlements</h3><p class="lede">This was your biggest miss by topic score. You guessed he would spend to preserve programs. He makes deficit reduction a central priority and would slow Social Security and Medicare benefit growth. You did get his tax position right: moderately higher taxes on high earners (U1).</p><details class="more"><summary>Show the 3 questions</summary><ul class="pairs"><li class="pair">
   <div class="ph"><span class="code qid">U2</span><span class="qt">Federal spending and deficits</span></div>
   <div class="ga"><div><span class="lab lg">Your guess</span><p>Prioritize growth-enhancing structural reforms over near-term deficit targets</p></div>
   <div><span class="lab la">Gene</span><p>Make deficit reduction a central priority through meaningful spending reforms and some revenue measures</p></div></div>
@@ -159,8 +167,8 @@ td .why { margin-top: 6px; font-family: var(--font-q); font-style: italic; color
   <div class="ph"><span class="code qid">U14</span><span class="qt">College affordability and student loans</span></div>
   <div class="ga"><div><span class="lab lg">Your guess</span><p>Expand targeted grants while limiting excessive borrowing and holding institutions accountable for cost and outcomes</p></div>
   <div><span class="lab la">Gene</span><p>Reduce federal lending and subsidies significantly, relying more on institutional competition and private financing</p></div></div>
-</li></ul></article>
-<article class="pat"><h3>Rights against majorities</h3><p class="lede">You guessed he would defer to elected majorities and allow limits on speech. He picked the firm rights option every time: rights constrain majorities, courts should enforce them, and speech and privacy deserve strong protection.</p><ul class="pairs"><li class="pair">
+</li></ul></details></article>
+<article class="pat"><h3>Rights against majorities</h3><p class="lede">You guessed he would defer to elected majorities and allow limits on speech. He picked the firm rights option every time: rights constrain majorities, courts should enforce them, and speech and privacy deserve strong protection.</p><details class="more"><summary>Show the 5 questions</summary><ul class="pairs"><li class="pair">
   <div class="ph"><span class="code qid">P19</span><span class="qt">Democratic legitimacy versus constitutional rights</span></div>
   <div class="ga"><div><span class="lab lg">Your guess</span><p>Only if the constitutional text clearly and unambiguously forbids the restriction.</p></div>
   <div><span class="lab la">Gene</span><p>Absolutely. Fundamental rights constrain even overwhelming democratic majorities.</p></div></div>
@@ -180,8 +188,8 @@ td .why { margin-top: 6px; font-family: var(--font-q); font-style: italic; color
   <div class="ph"><span class="code qid">U25</span><span class="qt">National security and domestic surveillance</span></div>
   <div class="ga"><div><span class="lab lg">Your guess</span><p>Permit narrowly targeted expansions where agencies can demonstrate specific operational needs</p></div>
   <div><span class="lab la">Gene</span><p>Substantially restrict existing surveillance authorities and require individualized warrants for more activities</p></div></div>
-</li></ul></article>
-<article class="pat"><h3>Crime and public order</h3><p class="lede">You guessed he would lean toward prevention and alternatives to arrest. He wrote that Democrats have been too soft on crime, and he wants laws enforced and public disorder stopped. His civil liberties score lands near your guess only because these misses cancel out the ones under rights. You did get his drug (U10) and sentencing (U9) positions right.</p><ul class="pairs"><li class="pair">
+</li></ul></details></article>
+<article class="pat"><h3>Crime and public order</h3><p class="lede">You guessed he would lean toward prevention and alternatives to arrest. He wrote that Democrats have been too soft on crime, and he wants laws enforced and public disorder stopped. His civil liberties score lands near your guess only because these misses cancel out the ones under rights. You did get his drug (U10) and sentencing (U9) positions right.</p><details class="more"><summary>Show the 3 questions</summary><ul class="pairs"><li class="pair">
   <div class="ph"><span class="code qid">P34</span><span class="qt">Crime, punishment, and the rule of law</span></div>
   <div class="ga"><div><span class="lab lg">Your guess</span><p>Emphasize rehabilitation, prevention, and reducing incarceration while strictly protecting defendants&#x27; rights</p></div>
   <div><span class="lab la">Gene</span><p>Prioritize punishment and public order, accepting some additional restrictions to reduce crime</p></div></div>
@@ -193,8 +201,8 @@ td .why { margin-top: 6px; font-family: var(--font-q); font-style: italic; color
   <div class="ph"><span class="code qid">P30</span><span class="qt">Public order versus civil liberties</span></div>
   <div class="ga"><div><span class="lab lg">Your guess</span><p>Strong protest rights, tolerating substantial disruption unless violence or direct threats occur</p></div>
   <div><span class="lab la">Gene</span><p>Protect protest rights while using narrow, content-neutral restrictions on severe disruption</p></div></div>
-</li></ul></article>
-<article class="pat"><h3>Equality: the worst-off, not groups</h3><p class="lede">You guessed he would favor group-based remedies. He opposes group preferences. He gives extra moral weight to whoever is worst off and would reduce extreme gaps in outcomes. He is also less troubled by inequality itself than you guessed.</p><ul class="pairs"><li class="pair">
+</li></ul></details></article>
+<article class="pat"><h3>Equality: the worst-off, not groups</h3><p class="lede">You guessed he would favor group-based remedies. He opposes group preferences. He gives extra moral weight to whoever is worst off and would reduce extreme gaps in outcomes. He is also less troubled by inequality itself than you guessed.</p><details class="more"><summary>Show the 4 questions</summary><ul class="pairs"><li class="pair">
   <div class="ph"><span class="code qid">P14</span><span class="qt">Group disadvantage and individual fairness</span></div>
   <div class="ga"><div><span class="lab lg">Your guess</span><p>Support the preference; reducing structural disadvantage can justify unequal individual treatment.</p></div>
   <div><span class="lab la">Gene</span><p>Oppose differential treatment based on group identity; equal individual treatment is paramount.</p></div></div>
@@ -210,8 +218,8 @@ td .why { margin-top: 6px; font-family: var(--font-q); font-style: italic; color
   <div class="ph"><span class="code qid">P2</span><span class="qt">How do you view economic inequality?</span></div>
   <div class="ga"><div><span class="lab lg">Your guess</span><p>Fundamentally unjust when people have very different living standards</p></div>
   <div><span class="lab la">Gene</span><p>Acceptable, but excessive inequality threatens opportunity and society</p></div></div>
-</li></ul></article>
-<article class="pat"><h3>Economics, in both directions</h3><p class="lede">Your misses here went both ways, so his economic score looks close to your guess even though many answers differ. In principle he is more pro-market than you guessed. On specific policies he is more willing to intervene than you guessed: antitrust, climate, industrial policy, and healthcare.</p><ul class="pairs"><li class="pair">
+</li></ul></details></article>
+<article class="pat"><h3>Economics, in both directions</h3><p class="lede">Your misses here went both ways, so his economic score looks close to your guess even though many answers differ. In principle he is more pro-market than you guessed. On specific policies he is more willing to intervene than you guessed: antitrust, climate, industrial policy, and healthcare.</p><details class="more"><summary>Show the 6 questions</summary><ul class="pairs"><li class="pair">
   <div class="ph"><span class="code qid">P7</span><span class="qt">Markets versus government</span></div>
   <div class="ga"><div><span class="lab lg">Your guess</span><p>A mixed economy, with substantial public provision and regulation where warranted</p></div>
   <div><span class="lab la">Gene</span><p>Markets should be the default, with government correcting identifiable failures</p></div></div>
@@ -235,8 +243,8 @@ td .why { margin-top: 6px; font-family: var(--font-q); font-style: italic; color
   <div class="ph"><span class="code qid">U5</span><span class="qt">Healthcare system</span></div>
   <div class="ga"><div><span class="lab lg">Your guess</span><p>A universal public option with automatic or near-universal coverage while retaining private insurers</p></div>
   <div><span class="lab la">Gene</span><p>Single-payer national insurance replacing most private primary insurance</p></div></div>
-</li></ul></article>
-<article class="pat"><h3>China and allies</h3><p class="lede">You guessed he would favor trade with China and a leading US role in alliances. He calls China the biggest geopolitical threat the US faces and wants strong limits on strategic technology. On alliances he wants allies to pay more. On P35 his explanation argues for caution, but he picked the more interventionist option.</p><ul class="pairs"><li class="pair">
+</li></ul></details></article>
+<article class="pat"><h3>China and allies</h3><p class="lede">You guessed he would favor trade with China and a leading US role in alliances. He calls China the biggest geopolitical threat the US faces and wants strong limits on strategic technology. On alliances he wants allies to pay more. On P35 his explanation argues for caution, but he picked the more interventionist option.</p><details class="more"><summary>Show the 4 questions</summary><ul class="pairs"><li class="pair">
   <div class="ph"><span class="code qid">U23</span><span class="qt">China, trade, and economic security</span></div>
   <div class="ga"><div><span class="lab lg">Your guess</span><p>Use narrowly targeted national-security controls while generally favoring expanded trade and economic engagement</p></div>
   <div><span class="lab la">Gene</span><p>Adopt strong restrictions in strategic technologies while preserving significant ordinary trade</p></div></div>
@@ -252,7 +260,7 @@ td .why { margin-top: 6px; font-family: var(--font-q); font-style: italic; color
   <div class="ph"><span class="code qid">P35</span><span class="qt">International security and military intervention</span></div>
   <div class="ga"><div><span class="lab lg">Your guess</span><p>Provide limited assistance and prioritize diplomacy to minimize escalation</p></div>
   <div><span class="lab la">Gene</span><p>Support the threatened democracy if the strategic outlook and expected consequences justify the risks</p></div></div>
-</li></ul></article>
+</li></ul></details></article>
   </section>
 
   <section class="s">
@@ -331,7 +339,7 @@ td .why { margin-top: 6px; font-family: var(--font-q); font-style: italic; color
     }).map(function (r) {
       return '<tr><td><span class="code qid">' + r.id + '</span> ' + esc(r.title) + '</td>' +
         '<td>' + esc(r.guess) + '</td>' +
-        '<td>' + esc(r.actual) + (r.why ? '<p class="why">"' + esc(r.why) + '"</p>' : '') + '</td>' +
+        '<td>' + esc(r.actual) + (r.why ? '<details class="whyx"><summary>Explanation</summary><p class="why">"' + esc(r.why) + '"</p></details>' : '') + '</td>' +
         '<td><span class="pill ' + (r.match ? 'y">Match' : 'n">Miss') + '</span></td></tr>';
     }).join('');
     document.querySelectorAll('.filters button').forEach(function (b) {

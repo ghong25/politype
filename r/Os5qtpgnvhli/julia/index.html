@@ -168,6 +168,21 @@ button:focus-visible, a:focus-visible, summary:focus-visible { outline: 2px soli
   .axis .bar-wrap { display: flex; flex-direction: column; gap: 4px; }
   .axis details.ev { grid-column: 2; }
 }
+
+/* Collapsible cards: the summary is the headline, the body holds the reasoning */
+details.x > summary { list-style: none; cursor: pointer; display: flex; flex-direction: column; gap: 8px; }
+details.x > summary::-webkit-details-marker { display: none; }
+details.x > summary .more { font-size: 13px; color: var(--muted); display: inline-flex; gap: 6px; align-items: center; }
+details.x > summary .more::before { content: "+"; font-family: var(--font-code); }
+details.x[open] > summary .more::before { content: "−"; }
+details.x[open] > summary .more span::after { content: "Hide details"; }
+details.x:not([open]) > summary .more span::after { content: "Show details"; }
+details.x > .body { display: flex; flex-direction: column; gap: 10px; padding-top: 10px; margin-top: 2px; border-top: 1px dashed var(--rule); }
+.lead { font-size: 15px; }
+.toolbar { display: flex; justify-content: space-between; gap: 10px 20px; flex-wrap: wrap; align-items: center; }
+.btn { font: inherit; font-size: 13.5px; padding: 5px 12px; border-radius: 4px; border: 1px solid var(--rule); background: var(--sheet); color: var(--ink); cursor: pointer; }
+.btn:hover { border-color: var(--ink); }
+.thinkers { display: flex; flex-direction: column; gap: 8px; }
 footer { font-size: 13px; color: var(--muted); border-top: 1px solid var(--rule); padding-top: 14px; }
 </style>
 
@@ -243,6 +258,16 @@ footer { font-size: 13px; color: var(--muted); border-top: 1px solid var(--rule)
       intro && h("p", { class: "intro", text: intro }), ...body);
   }
 
+  // First sentence as the visible gist; the rest goes behind "Show details".
+  function split(text) {
+    const m = (text || "").match(/^(.+?[.!?])(\s+[A-Z“"(].*)?$/s);
+    return m ? [m[1], (m[2] || "").trim()] : [text || "", ""];
+  }
+  function card(cls, head, body) {
+    return h("details", { class: "x " + cls }, h("summary", {}, ...head, h("span", { class: "more" }, h("span"))),
+      h("div", { class: "body" }, ...body));
+  }
+
   const P = R.portrait, S = R.stats;
   const name = R.respondent.name || "Anonymous";
   const head = R.tensions.find((t) => t.id === R.headline_tension);
@@ -259,17 +284,24 @@ footer { font-size: 13px; color: var(--muted); border-top: 1px solid var(--rule)
         h("p", { class: "summary", text: P.summary })),
       h("div", { class: "traits" }, P.traits.map((t) => h("div", { class: "t" }, h("b", { text: t.label }), h("span", { text: t.detail }))))),
     h("div", { class: "positions" }, P.signature_positions.map((p) => h("div", {}, h("b", { text: p.label }), h("span", { text: p.detail })))),
-    head && h("div", { class: "headline" }, h("span", { class: "k", text: "Your sharpest tension" }), h("b", { text: head.title }), h("span", { text: head.detail })));
+    head && h("div", { class: "headline" }, h("span", { class: "k", text: "Your sharpest tension" }), h("b", { text: head.title }), h("span", { text: split(head.detail)[0] }), h("a", { href: "#tensions", style: "font-size:13px;color:inherit", text: "See all tensions" })));
 
   const toc = h("nav", { class: "toc", "aria-label": "Report sections" },
     [["spectrum", "Spectrum"], ["affiliations", "Affiliations"], ["tensions", "Tensions"], ["blindspots", "Blind spots"], ["you", "Who you are"], ["evidence", "Why these findings"]]
       .map(([id, t]) => h("a", { href: "#" + id, text: t })));
 
   // Why-these-findings: portrait evidence, expandable
+  const expandBtn = h("button", { class: "btn", type: "button", id: "expand-all", text: "Expand all" });
+  expandBtn.addEventListener("click", () => {
+    const open = expandBtn.textContent === "Expand all";
+    document.querySelectorAll("details.x").forEach((d) => { d.open = open; });
+    expandBtn.textContent = open ? "Collapse all" : "Expand all";
+  });
+
   const why = section("07", "evidence", "Why these findings", "Each trait and position above comes from specific answers. Open one to see them.",
     h("div", { class: "cards" },
-      ...P.traits.map((t, i) => h("div", { class: "finding" }, h("h3", { text: t.label }), h("p", { text: t.detail }), evidence(t.evidence), fixControl("trait-" + i, t.label))),
-      ...P.signature_positions.map((p, i) => h("div", { class: "finding" }, h("h3", { text: p.label }), h("p", { text: p.detail }), evidence(p.evidence), fixControl("position-" + i, p.label)))));
+      ...P.traits.map((t, i) => card("finding", [h("h3", { text: t.label })], [h("p", { text: t.detail }), evidence(t.evidence), fixControl("trait-" + i, t.label)])),
+      ...P.signature_positions.map((p, i) => card("finding", [h("h3", { text: p.label })], [h("p", { text: p.detail }), evidence(p.evidence), fixControl("position-" + i, p.label)]))));
 
   // 2. Spectrum
   const pct = (v) => ((v + 2) / 4) * 100;
@@ -293,16 +325,17 @@ footer { font-size: 13px; color: var(--muted); border-top: 1px solid var(--rule)
     if (!c) return h("td", {}, "");
     const srcs = (c.sources || []).map((s) => h("a", { href: s.url, target: "_blank", rel: "noopener", text: `${s.title}${s.date ? " (" + s.date + ")" : ""}` }));
     return h("td", {}, h("span", { class: "ag " + (c.agreement || "unclear"), text: AG[c.agreement] || "Unclear" }),
-      c.note && h("span", { class: "note", text: c.note }),
-      c.summary && h("details", {}, h("summary", { text: "Documented position" }), h("p", { text: c.summary }), ...srcs.map((a) => h("div", {}, a))));
+      (c.note || c.summary) && h("details", {}, h("summary", { text: "Why" }),
+        c.note && h("span", { class: "note", text: c.note }),
+        c.summary && h("p", {}, h("b", { text: "Documented position: " }), c.summary), ...srcs.map((a) => h("div", {}, a))));
   };
   const affil = section("03", "affiliations", "Your political and philosophical affiliations", null,
-    h("div", { class: "cards" }, A.traditions.map((t, i) => h("div", { class: "finding" },
-      h("h3", { text: t.name }), h("p", { class: "muted", text: t.definition }),
-      h("dl", { class: "fields" }, h("dt", { text: "Where you overlap" }), h("dd", { text: t.overlap }), h("dt", { text: "Where you differ" }), h("dd", { text: t.differences })),
-      evidence(t.evidence), fixControl("tradition-" + i, t.name)))),
+    h("div", { class: "cards" }, A.traditions.map((t, i) => card("finding",
+      [h("h3", { text: t.name }), h("p", { class: "muted lead", text: t.definition })],
+      [h("dl", { class: "fields" }, h("dt", { text: "Where you overlap" }), h("dd", { text: t.overlap }), h("dt", { text: "Where you differ" }), h("dd", { text: t.differences })),
+       evidence(t.evidence), fixControl("tradition-" + i, t.name)]))),
     A.thinkers.length && h("div", { class: "finding" }, h("span", { class: "label-sm", text: "Thinkers you resemble" }),
-      ...A.thinkers.map((t) => h("p", {}, h("b", { text: t.name + (t.cited_by_you ? " (you cite them)" : "") + ". " }), t.why))),
+      h("div", { class: "thinkers" }, A.thinkers.map((t) => card("", [h("b", { text: t.name + (t.cited_by_you ? " (you cite them)" : "") })], [h("p", { text: t.why })])))),
     A.party_rows.length && h("p", { class: "intro", text: A.party_summary }),
     A.party_rows.length && h("div", { class: "table-wrap" }, h("table", {},
       h("thead", {}, h("tr", {}, h("th", { text: "Issue" }), h("th", { text: "You" }), h("th", { text: "Democrats" }), h("th", { text: "Republicans" }))),
@@ -312,25 +345,26 @@ footer { font-size: 13px; color: var(--muted); border-top: 1px solid var(--rule)
   // 4. Tensions
   const tensions = section("04", "tensions", "Your internal tensions",
     "Each tension below was proposed, then checked against your own explanations by a second pass that tried to refute it. Where you had already reconciled two views, it says so.",
-    h("div", { class: "cards" }, R.tensions.map((t) => h("div", { class: "finding" },
+    h("div", { class: "cards" }, R.tensions.map((t) => { const [g, rest] = split(t.detail); return card("finding", [
       h("div", { class: "chips" }, h("span", { class: "chip", text: CAT[t.category] || t.category }),
         h("span", { class: "chip " + t.status, text: t.status === "stands" ? "Unresolved" : "You've reconciled this" })),
-      h("h3", { text: t.title }), h("p", { text: t.detail }),
+      h("h3", { text: t.title }), h("p", { class: "lead", text: g })], [
+      rest && h("p", { text: rest }),
       t.status === "stands" && h("dl", { class: "fields" },
         h("dt", { text: "Why it matters" }), h("dd", { text: t.why_it_matters }),
         h("dt", { text: "What would resolve it" }), h("dd", { text: t.what_would_resolve })),
-      evidence(t.evidence), fixControl("tension-" + t.id, t.title)))));
+      evidence(t.evidence), fixControl("tension-" + t.id, t.title)]); })));
 
   // 5. Blind spots
   const blind = section("05", "blindspots", "Your potential blind spots",
     "Assumptions your answers rely on that deserve a second look. None of these say your position is wrong.",
-    h("div", { class: "cards" }, R.blind_spots.map((b, i) => h("div", { class: "finding" },
-      h("h3", { text: b.title }), h("p", { text: b.detail }),
+    h("div", { class: "cards" }, R.blind_spots.map((b, i) => card("finding", [
+      h("h3", { text: b.title }), h("p", { class: "lead", text: b.assumption })], [
+      h("p", { text: b.detail }),
       h("dl", { class: "fields" },
-        h("dt", { text: "The assumption" }), h("dd", { text: b.assumption }),
         h("dt", { text: "Why it matters" }), h("dd", { text: b.why_it_matters }),
         h("dt", { text: "What would resolve it" }), h("dd", { text: b.what_would_resolve })),
-      evidence(b.evidence), fixControl("blind-" + i, b.title)))),
+      evidence(b.evidence), fixControl("blind-" + i, b.title)]))),
     R.open_questions.length && h("div", { class: "finding" }, h("span", { class: "label-sm", text: "Questions your answers leave open" }),
       h("ul", { class: "qs" }, R.open_questions.map((q) => h("li", { text: q })))));
 
@@ -340,14 +374,16 @@ footer { font-size: 13px; color: var(--muted); border-top: 1px solid var(--rule)
     h("p", { class: "profile-portrait", text: Pr.summary_portrait }),
     h("div", { class: "cards" }, Pr.sections.map((s, si) => h("div", { class: "finding" }, h("h3", { text: s.title }),
       h("div", { class: "sublist" },
-        ...(s.strong || []).map((o, i) => h("div", { class: "obs" }, h("p", { text: o.claim }), o.quote && h("blockquote", { text: "“" + o.quote + "”" }), evidence(o.evidence), fixControl(`you-${si}-s${i}`, o.claim.slice(0, 80)))),
+        ...(s.strong || []).map((o, i) => { const [g, rest] = split(o.claim); return card("obs", [h("p", { text: g })],
+          [rest && h("p", { text: rest }), o.quote && h("blockquote", { text: "“" + o.quote + "”" }), evidence(o.evidence), fixControl(`you-${si}-s${i}`, o.claim.slice(0, 80))]); }),
         (s.speculative || []).length && h("span", { class: "label-sm", text: "Speculative" }),
-        ...(s.speculative || []).map((o, i) => h("div", { class: "obs spec" }, h("p", { text: o.claim }), evidence(o.evidence), fixControl(`you-${si}-p${i}`, o.claim.slice(0, 80)))))))));
+        ...(s.speculative || []).map((o, i) => { const [g, rest] = split(o.claim); return card("obs spec", [h("p", { text: g })],
+          [rest && h("p", { text: rest }), evidence(o.evidence), fixControl(`you-${si}-p${i}`, o.claim.slice(0, 80))]); }))))));
 
   const footer = h("footer", {}, `Generated ${R.generated_at} from ${S.answered} answers and ${S.explained} written explanations. The spectrum is computed from a fixed scoring key. The written analysis is by Claude and cites the answers behind every finding. Use "That's not what I meant" on anything that misreads you, then send your corrections back.`);
 
   app.textContent = "";
-  app.append(portrait, toc, spectrum, affil, tensions, blind, you, why, footer);
+  app.append(portrait, h("div", { class: "toolbar" }, toc, expandBtn), spectrum, affil, tensions, blind, you, why, footer);
 
   // Corrections tray
   function renderTray() {
